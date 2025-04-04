@@ -1,0 +1,100 @@
+import Post from "../models/Post.js";
+import Story from "../models/Story.js";
+import User from "../models/User.js";
+
+// 🔥 Fetch all posts (sorted by latest)
+export const fetchAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error("Fetch posts error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// 🔥 Fetch user details (Name + Image)
+export const fetchUserDetails = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await User.findById(userId).select("username profilePic");
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Fetch user error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// 🔥 Fetch all stories (latest first)
+export const fetchAllStories = async (req, res) => {
+  try {
+    const stories = await Story.find().sort({ createdAt: -1 });
+    res.status(200).json(stories);
+  } catch (error) {
+    console.error("Fetch stories error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// 🔥 Create a new post
+export const createPost = async (req, res) => {
+  try {
+    const { userId, fileType, file, description, location } = req.body;
+    console.log("Received userId:", req.body.userId);
+
+
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const newPost = new Post({
+      userId,
+      userName: user.userName,
+      userPic: user.profilePic,
+      fileType,
+      file,
+      description,
+      location,
+      likes: [],
+      comments: [],
+    });
+
+    await newPost.save();
+    console.log("Request Body:", req.body);
+    res.status(201).json({ message: "Post created successfully" });
+  } catch (error) {
+    console.error("Create post error:", error);
+    console.log("Request Body:", req.body);
+
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// 🔥 Create a new story
+export const createStory = async (req, res) => {
+  try {
+    const { userId, fileType, file, text } = req.body;
+
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const newStory = new Story({
+      userId,
+      username: user.username,
+      userPic: user.profilePic,
+      fileType,
+      file,
+      text,
+      viewers: [],
+    });
+
+    await newStory.save();
+    res.status(201).json({ message: "Story created successfully" });
+  } catch (error) {
+    console.error("Create story error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};

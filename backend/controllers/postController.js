@@ -83,7 +83,7 @@ export const createStory = async (req, res) => {
 
     const newStory = new Story({
       userId,
-      username: user.username,
+      username: user.userName,
       userPic: user.profilePic,
       fileType,
       file,
@@ -95,6 +95,62 @@ export const createStory = async (req, res) => {
     res.status(201).json({ message: "Story created successfully" });
   } catch (error) {
     console.error("Create story error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+//Like a post
+export const likePost = async (req, res) => {
+  const { postId, userId } = req.body;
+  try {
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    if (!post.likes.includes(userId)) {
+      post.likes.push(userId);
+      await post.save();
+    }
+
+    res.status(200).json({ message: "Post liked", likes: post.likes });
+
+
+  } catch (error) {
+    console.error("Like error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// unlike
+export const unlikePost = async (req, res) => {
+  const { postId, userId } = req.body;
+  try {
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    post.likes = post.likes.filter((id) => id && id.toString() !== userId);
+    await post.save();
+
+    res.status(200).json({ message: "Post unliked", likes: post.likes });
+  } catch (error) {
+    console.error("Unlike error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// comment
+export const addComment = async (req, res) => {
+  const { postId, userId, userName, text } = req.body;
+  try {
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    const newComment = { userId, userName, text };
+post.comments.push(newComment);
+await post.save();
+
+res.status(201).json({ message: "Comment added", comment: newComment });
+  } catch (error) {
+    console.error("Comment error:", error);
     res.status(500).json({ error: "Server error" });
   }
 };

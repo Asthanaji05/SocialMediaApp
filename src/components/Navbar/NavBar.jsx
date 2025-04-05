@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import ThemeSwitcher from "../../pages/ThemeSwitcher";
+import { useTheme } from "../../contexts/ThemeContext";
 const NavBar = () => {
+  const { primaryColor } = useTheme();
   return (
     <nav className="bg-black text-white p-4 flex justify-between">
-      <h1 className="text-xl font-bold">MyApp</h1>
+      <h1 className="text-xl font-bold text-[var(--primary-color)]">MaitriLok</h1>
       <div className="space-x-4">
         <Link to="/" className="hover:underline">Home</Link>
         <Link to="/feed" className="hover:underline">Feed</Link>

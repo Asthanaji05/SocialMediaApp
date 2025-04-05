@@ -5,6 +5,9 @@ import {
   fetchUserDetails,
   createPost,
   createStory,
+  likePost,
+  unlikePost,
+  addComment,
 } from "../controllers/postController.js";
 
 const router = express.Router();
@@ -17,4 +20,8 @@ router.post("/createStory", createStory); // ✅ Added Story creation route
 router.get("/fetchAllPosts", fetchAllPosts);
 router.get("/fetchAllStories", fetchAllStories);
 router.post("/fetchUserDetails", fetchUserDetails); // ✅ Combined Name & Image fetch
+
+router.post("/like", likePost);
+router.post("/unlike", unlikePost);
+router.post("/comment", addComment);
 export default router;

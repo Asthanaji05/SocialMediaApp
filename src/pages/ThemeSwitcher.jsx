@@ -2,11 +2,11 @@ import { useTheme } from "../contexts/ThemeContext";
 
 const colors = ["red", "green", "blue", "yellow", "purple"];
 const colorMap = {
-  red: "red-500",
-  green: "green-500",
-  blue: "blue-500",
-  yellow: "yellow-500",
-  purple: "purple-500",
+  red: "bg-red-500",
+  green: "bg-green-500",
+  blue: "bg-blue-500",
+  yellow: "bg-yellow-500",
+  purple: "bg-purple-500",
 };
 
 const ThemeSwitcher = () => {
@@ -21,7 +21,7 @@ const ThemeSwitcher = () => {
             console.log("Changing color to:", color);
             setPrimaryColor(color);
           }}
-          className={`w-6 h-6 rounded-full border-2 bg-${colorMap[color]} ${
+          className={`w-6 h-6 rounded-full border-2 ${colorMap[color]} ${
             primaryColor === color ? "border-white" : "border-transparent"
           }`}
         />

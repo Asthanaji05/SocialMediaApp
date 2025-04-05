@@ -5,6 +5,7 @@ import Story from "../components/Feed/Story";
 import CreatePost from "../components/Feed/CreatePost";
 import CreateStory from "../components/Feed/CreateStory";
 import { useAuth } from "../contexts/AuthContext";
+import { useTheme } from "../contexts/ThemeContext";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -32,7 +33,7 @@ const Feed = () => {
 
     fetchPosts();
     fetchStories();
-  }, [posts, stories]);
+  }, [setPosts, setStories]);
 
   // Function to update posts after creation
   const addNewPost = (newPost) => {
@@ -50,17 +51,17 @@ const Feed = () => {
         {/* Show Create Story & Create Post Only if Logged In */}
         {user && (
           <>
-            {/* <CreateStory onStoryCreated={addNewStory} /> */}
+            <CreateStory onStoryCreated={addNewStory} />
             <CreatePost onPostCreated={addNewPost} />
           </>
         )}
 
         {/* Stories Section */}
-        {/* <div className="flex space-x-4 overflow-x-auto p-2">
+        <div className="flex space-x-4 overflow-x-auto p-2">
           {stories.map((story, index) => (
             <Story key={index} {...story} />
           ))}
-        </div> */}
+        </div>
 
         {/* Posts Section */}
         <div className="space-y-6 mt-4">

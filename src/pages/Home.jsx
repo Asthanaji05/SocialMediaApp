@@ -1,64 +1,66 @@
 import { useEffect } from "react";
 import { PlusCircle, Flame } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const { primaryColor } = useTheme();
   console.log("Primary color in Home:", primaryColor); // Debugging log
 
   useEffect(() => {
-    document.title = "Home | RedSocial";
+    document.title = "About Us | MaitriLok";
   }, []);
 
   return (
-    <div className={`min-h-screen bg-black  p-4 text-${primaryColor}-500`}>
-      {/* Header */}
-      <header className="flex justify-between items-center mb-6">
-        <h1 className={`text-3xl font-bold text-${primaryColor}-500`}>RedSocial🔥</h1>
-        <button className={`bg-${primaryColor}-500 px-4 py-2 rounded-full hover:bg-${primaryColor}-600`}>
-          New Post
-        </button>
-      </header>
+<div className="min-h-screen bg-black text-white px-6 py-10">
 
-      {/* Stories */}
-      <section className="flex space-x-4 overflow-x-auto pb-3 mb-6 border-b border-primary-900">
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className="flex flex-col items-center">
-            <div className={`w-16 h-16 rounded-full border-2 border-${primaryColor}-600 bg-gray-800`}></div>
-            <p className="text-xs mt-1">User{i + 1}</p>
-          </div>
-        ))}
-        <div className="flex flex-col items-center">
-          <PlusCircle className={`text-${primaryColor}-600 w-6 h-6`} />
-          <p className="text-xs mt-1">Add</p>
-        </div>
+      {/* Hero Section */}
+      <section className="mb-16">
+        <h2 className="text-4xl font-bold text-[var(--primary-color)] mb-4">A World of True Connections</h2>
+        <p className="text-gray-300 max-w-2xl">
+          Welcome to MaitriLok – a soulful social platform rooted in Maitri (friendship), where connections aren't just made, they're cherished.
+        </p>
+        <Link to="/login">
+        <button className="mt-6 px-6 py-3 rounded-full bg-[var(--primary-color)] text-black font-semibold hover:bg-opacity-80">
+          Join Now
+        </button>
+        </Link>
       </section>
 
-      {/* Feed */}
-      <main className="space-y-6">
-        {[1, 2, 3].map((post) => (
-          <div
-            key={post}
-            className={`bg-gray-900 rounded-2xl p-4 shadow-lg shadow-${primaryColor}-900`}
-          >
-            <div className="flex items-center space-x-3 mb-3">
-              <div className={`w-10 h-10 rounded-full bg-${primaryColor}-600`}></div>
-              <p className="font-semibold">User{post}</p>
-            </div>
-            <p className="mb-3 text-sm text-gray-300">
-              This is a demo post #{post} on RedSocial. 🔥
-            </p>
-            <div className="w-full h-48 bg-gray-800 rounded-xl mb-2"></div>
-            <div className="flex justify-between text-sm text-primary-400">
-              <span>❤️ 120</span>
-              <span>💬 45</span>
-              <span>🔁 12</span>
-            </div>
-          </div>
-        ))}
-      </main>
-    </div>
-  );
-};
+      {/* About Us */}
+      <section className="mb-16">
+        <h3 className="text-2xl font-semibold text-[var(--primary-color)] mb-2">Our Mission</h3>
+        <p className="text-gray-400 max-w-3xl">
+          At MaitriLok, our mission is to bring back the essence of real connections. In a world full of distractions, we aim to build a community based on trust, expression, and cultural harmony.
+        </p>
+      </section>
 
+      {/* Features */}
+      <section className="mb-16">
+        <h3 className="text-2xl font-semibold text-[var(--primary-color)] mb-4">Why MaitriLok?</h3>
+        <ul className="list-disc list-inside text-gray-300 space-y-2">
+          <li>✨ Safe & soulful digital environment</li>
+          <li>📜 Rooted in Bharatiya values and friendship</li>
+          <li>💬 Real-time, meaningful conversations</li>
+          <li>🎨 Customizable themes with neon vibes</li>
+        </ul>
+      </section>
+
+      {/* CTA Section */}
+      <section className="mb-16 text-center">
+        <h3 className="text-2xl font-semibold text-[var(--primary-color)] mb-4">Ready to be a part of MaitriLok?</h3>
+        <Link to="/signup">
+        <button className="px-8 py-3 rounded-full bg-[var(--primary-color)] text-black font-semibold hover:bg-opacity-80">
+          Create Your Account
+        </button>
+        </Link>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-700 pt-6 mt-10 text-center text-sm text-gray-500">
+        © {new Date().getFullYear()} MaitriLok. All rights reserved.
+      </footer>
+    </div>
+);
+};
 export default Home;

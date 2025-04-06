@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsers, getUserById, createUser, updateUser, deleteUser,loginUser, getUserProfile } from '../controllers/userController.js';
+import { getUsers, getUserById, createUser, updateUser, deleteUser,loginUser, getUserProfile , followUser , unfollowUser , getFollowers, getFollowing , getUserProfileByEmail, getUserProfileByUsername, getFollowingUsers} from '../controllers/userController.js';
 import { verifyToken } from '../middleware/authMiddleware.js'; // Import the verifyToken middleware
 // import { isAuthenticated } from '../middleware/authMiddleware.js'; // Import the isAuthenticated middleware
 const router = express.Router();
@@ -12,5 +12,22 @@ router.put('/:id', updateUser);
 router.delete('/:id', deleteUser);
 // Login Route
 router.post("/login", loginUser);
+// Follow a user
+router.post("/follow/:id", verifyToken, followUser);
+// Unfollow a user
+router.post("/unfollow/:id", verifyToken, unfollowUser);
+// Get followers of a user
+router.get("/followers/:userId", verifyToken, getFollowers);
+// Get following of a user
+router.get("/following/:userId", verifyToken, getFollowing);
+// Get user profile by ID
+router.get("/profile/:id", verifyToken, getUserProfile);
+// Get user profile by username
+router.get("/profile/:username", verifyToken, getUserProfileByUsername);
+// Get user profile by email
+router.get("/profile/:email", verifyToken, getUserProfileByEmail);
+// Get following users of a user
+router.get("/:userId/following", verifyToken, getFollowingUsers);
+
 
 export default router;

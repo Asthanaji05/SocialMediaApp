@@ -1,15 +1,17 @@
 import mongoose from "mongoose";
 
-const chatSchema = mongoose.Schema({
-    // _id = u1 _id + u2 _id  (u1 < u2 - compare both and arrange in order)
-    _id: {
-        type: String,
-        require: true
-    },
-    messages: {
-        type: Array
-    }
+const messageSchema = new mongoose.Schema({
+    sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    content: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now },
+    read: { type: Boolean, default: false }
 });
+
+const chatSchema = new mongoose.Schema({
+   // _id: { type: String, required: true },
+    messages: [messageSchema],
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] // Moved inside chatSchema
+}, { timestamps: true }); // Added timestamps
 
 const Chats = mongoose.model("chats", chatSchema);
 export default Chats;

@@ -28,12 +28,10 @@ export const createUser = async (req, res) => {
   // const { email, password, firstName, lastName, userName } = req.body;
   const { email, password, firstName, lastName = "", userName } = req.body;
 
-
   // Check if all required fields are provided
   if (!email || !password || !firstName || !userName) {
     console.log("Missing fields:", req.body); // Debugging
     return res.status(400).json({ message: "All fields are required" });
-
   }
 
   try {
@@ -201,5 +199,127 @@ export const changePassword = async (req, res) => {
     res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// follower and following controllers
+export const followUser = async (req, res) => {
+  const { userId } = req.body;
+  const followUserId = req.params.id;
+
+  try {
+    const user = await User.findById(userId);
+    const followUser = await User.findById(followUserId);
+
+    if (!user || !followUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.following.includes(followUserId)) {
+      user.following.push(followUserId);
+      followUser.followers.push(userId);
+      await user.save();
+      await followUser.save();
+    }
+
+    res.status(200).json({ message: "Followed successfully" });
+  } catch (error) {
+    console.error("Error following user:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+export const unfollowUser = async (req, res) => {
+  const { userId } = req.body;
+  const unfollowUserId = req.params.id;
+
+  try {
+    const user = await User.findById(userId);
+    const unfollowUser = await User.findById(unfollowUserId);
+
+    if (!user || !unfollowUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.following.includes(unfollowUserId)) {
+      user.following.pull(unfollowUserId);
+      unfollowUser.followers.pull(userId);
+      await user.save();
+      await unfollowUser.save();
+    }
+
+    res.status(200).json({ message: "Unfollowed successfully" });
+  } catch (error) {
+    console.error("Error unfollowing user:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Get followers and following
+export const getFollowers = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId).populate("followers", "-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user.followers);
+  } catch (error) {
+    console.error("Error fetching followers:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+export const getFollowing = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId).populate("following", "-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user.following);
+  } catch (error) {
+    console.error("Error fetching following:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// getUserProfileByUsername
+export const getUserProfileByUsername = async (req, res) => {
+  const { username } = req.params;
+  try {
+    const user = await User.findOne({ userName: username }).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user profile by username:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+// getUserProfileByEmail
+export const getUserProfileByEmail = async (req, res) => {
+  const { email } = req.params;
+  try {
+    const user = await User.findOne({ email }).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user profile by email:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Fetch users the logged-in user is following
+export const getFollowingUsers = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId).populate(
+      "following",
+      "firstName lastName userName image"
+    );
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user.following); // Return the list of followed users
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

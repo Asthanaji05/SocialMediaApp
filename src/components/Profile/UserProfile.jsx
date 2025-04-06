@@ -1,46 +1,42 @@
 import React, { useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import { Settings, MapPin, Link as LinkIcon } from "lucide-react";
+import Loading from "../UI/Loading";
+import { useAuth } from "../../contexts/AuthContext";
+import axios from "axios";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const UserProfile = () => {
-  const [user, setUser] = useState(null);
+  const {user, setUser} = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const token = localStorage.getItem("token"); // Get the JWT token from localStorage
-        const response = await fetch("http://localhost:3000/users/profile", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // Send the token in the Authorization header
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data); // Set the user data
-        } else {
-          const errorData = await response.json();
-          setError(errorData.message || "Failed to fetch user profile");
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const response = await axios.get("http://localhost:3000/users/profile", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUser(response.data);
+          localStorage.setItem("user", JSON.stringify(response.data)); // Store user data in localStorage
+        } catch (error) {
+          console.error("Error fetching user:", error);
+          setUser(null);
         }
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-        setError("An error occurred. Please try again.");
-      } finally {
-        setLoading(false);
       }
+      setLoading(false); // 👈 is line ko add karo
     };
-
-    fetchUserProfile();
+  
+    fetchUser();
   }, []);
+  
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
-  if (error) {
+  if (error || !user) {
     return (
       <div className=" min-h-screen flex items-center justify-center bg-black text-white px-6 py-10">
         <Link to="/login" className="underline text-[var(--primary-color)] hover:text-[var(--primary-color)]">
@@ -53,12 +49,13 @@ const UserProfile = () => {
   }
 
   return (
+    <div className="bg-black text-white min-h-screen flex items-center justify-center px-6 py-10">
     <div className="max-w-4xl mx-auto pt-20 px-4">
       <div className="bg-black text-white rounded-xl shadow-sm p-6 mb-6">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-5">
             <img
-              src={user.image || "https://via.placeholder.com/150"}
+              src={user.image || "https://picsum.photos/200/300"}
               alt="Profile"
               className="w-24 h-24 rounded-full object-cover"
             />
@@ -105,6 +102,7 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

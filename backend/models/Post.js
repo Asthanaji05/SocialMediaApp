@@ -9,7 +9,7 @@ const postSchema = new mongoose.Schema(
     },
     userName: { type: String, required: true },
     userPic: { type: String },
-    fileType: { type: String, enum: ["image", "video", "text"] }, // Not required now
+    fileType: { type: String, enum: ["image", "video", "text"] , required: false}, // Not required now
     file: { type: String }, // Image/Video URL
     description: { type: String, trim: true }, // Optional
     location: { type: String, trim: true },

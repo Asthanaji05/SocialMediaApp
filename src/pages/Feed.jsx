@@ -10,7 +10,27 @@ import { useTheme } from "../contexts/ThemeContext";
 const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [stories, setStories] = useState([]);
-  const { user } = useAuth();
+  const {user, setUser} = useAuth();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const response = await axios.get("http://localhost:3000/users/profile", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUser(response.data);
+        } catch (error) {
+          console.error("Error fetching user:", error);
+          setUser(null);
+        }
+      }
+      setLoading(false); // 👈 is line ko add karo
+    };
+  
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -37,7 +57,7 @@ const Feed = () => {
 
   // Function to update posts after creation
   const addNewPost = (newPost) => {
-    setPosts([newPost, ...posts]);
+    setPosts(prevPosts => [newPost, ...prevPosts]);
   };
 
   // Function to update stories after creation
@@ -46,22 +66,22 @@ const Feed = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-max p-4 bg-black">
       <div className="max-w-2xl mx-auto pt-20 px-4">
         {/* Show Create Story & Create Post Only if Logged In */}
         {user && (
           <>
-            <CreateStory onStoryCreated={addNewStory} />
+            {/* <CreateStory onStoryCreated={addNewStory} /> */}
             <CreatePost onPostCreated={addNewPost} />
           </>
         )}
 
         {/* Stories Section */}
-        <div className="flex space-x-4 overflow-x-auto p-2">
+        {/* <div className="flex space-x-4 overflow-x-auto p-2">
           {stories.map((story, index) => (
             <Story key={index} {...story} />
           ))}
-        </div>
+        </div> */}
 
         {/* Posts Section */}
         <div className="space-y-6 mt-4">

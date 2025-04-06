@@ -1,12 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-import passport from "passport";
-import configurePassport from "./config/passport.js";
+
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import cors from "cors";  // Ensure CORS is handled
-import authRoutes from "./routes/authRoutes.js";
+
+import path from 'path';
+// Serve static files from the "uploads" directory
+const __dirname = path.resolve();
 
 dotenv.config();
 connectDB();
@@ -20,43 +22,7 @@ app.use(cors({
     credentials: true,
 }));
 
-// Session Configuration with MongoDB Store
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET || "defaultSecret",
-        resave: false,
-        saveUninitialized: false,
-        store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // Persist sessions
-        cookie: {
-            secure: false,  // Set true in production with HTTPS
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000  // 1 day
-        }
-    })
-);
 
-// Passport Initialization
-// Session Middleware
-app.use(session({
-  secret: process.env.SESSION_SECRET || "defaultSecret",
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // Persist sessions
-  cookie: {
-      secure: false,  // Set true in production with HTTPS
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000  // 1 day
-  }
-}));
-
-// Passport Initialization (AFTER session middleware)
-configurePassport(passport);
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-// Routes
-app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {
     
@@ -65,10 +31,12 @@ app.get("/", (req, res) => {
 import userRoutes from "./routes/userRoutes.js";
 
 app.use("/users", userRoutes);
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 import postRoutes from "./routes/postRoutes.js";
 app.use("/posts", postRoutes);
-
+import chatRoutes from "./routes/chatRoutes.js";
+app.use("/chats", chatRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const listRoutes = (app) => {
     app._router.stack.forEach((middleware) => {

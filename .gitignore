@@ -25,6 +25,11 @@ dist-ssr
 
 .env
 README.md
-Folder Structure.md
-components.zip
+firebase.json
+firebase-debug.log
+storage.rules
+.firebaserc
+firebaseConfig.js 
+dataconnect 
+
 

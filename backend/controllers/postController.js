@@ -41,9 +41,14 @@ export const fetchAllStories = async (req, res) => {
 // 🔥 Create a new post
 export const createPost = async (req, res) => {
   try {
-    const { userId, fileType, file, description, location } = req.body;
-    console.log("Received userId:", req.body.userId);
+    const { userId, description, fileType } = req.body;
 
+    // Validate fileType
+    if (!["image", "video", "text"].includes(fileType)) {
+      return res.status(400).json({ error: "Invalid file type" });
+    }
+
+    const file = req.file ? `/uploads/${req.file.filename}` : null; // Use relative path
 
     // Check if user exists
     const user = await User.findById(userId);
@@ -56,18 +61,16 @@ export const createPost = async (req, res) => {
       fileType,
       file,
       description,
-      location,
       likes: [],
       comments: [],
     });
 
     await newPost.save();
-    console.log("Request Body:", req.body);
-    res.status(201).json({ message: "Post created successfully" });
+    res
+      .status(201)
+      .json({ message: "Post created successfully", post: newPost });
   } catch (error) {
     console.error("Create post error:", error);
-    console.log("Request Body:", req.body);
-
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -112,8 +115,6 @@ export const likePost = async (req, res) => {
     }
 
     res.status(200).json({ message: "Post liked", likes: post.likes });
-
-
   } catch (error) {
     console.error("Like error:", error);
     res.status(500).json({ error: "Server error" });
@@ -145,10 +146,10 @@ export const addComment = async (req, res) => {
     if (!post) return res.status(404).json({ error: "Post not found" });
 
     const newComment = { userId, userName, text };
-post.comments.push(newComment);
-await post.save();
+    post.comments.push(newComment);
+    await post.save();
 
-res.status(201).json({ message: "Comment added", comment: newComment });
+    res.status(201).json({ message: "Comment added", comment: newComment });
   } catch (error) {
     console.error("Comment error:", error);
     res.status(500).json({ error: "Server error" });

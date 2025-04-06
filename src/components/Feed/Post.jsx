@@ -3,6 +3,7 @@ import axios from "axios";
 
 import { ThumbsUp, MessageSquare, User } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useNavigate } from "react-router-dom";
 
 const Post = ({
   _id,
@@ -10,8 +11,10 @@ const Post = ({
   userPic,
   description,
   file,
+  fileType, // Add fileType to props
   likes,
   comments,
+  userId, // Add userId to props
 }) => {
   const { primaryColor } = useTheme();
   const [showComments, setShowComments] = useState(false);
@@ -19,13 +22,15 @@ const Post = ({
   const [commentList, setCommentList] = useState(comments || []);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes?.length || 0);
+  const navigate = useNavigate();
+  const currentUserId = localStorage.getItem("userId");
 
   const handleLike = async () => {
     try {
       const res = await axios.post("http://localhost:3000/posts/like", {
         postId: _id,
         userId: localStorage.getItem("userId"),
-        userName: localStorage.getItem("userName"), // ✅ Add this line
+        userName: localStorage.getItem("userName"),
         text: newComment,
       });
 
@@ -88,7 +93,7 @@ const Post = ({
   };
 
   return (
-    <div className="bg-white text-black rounded-xl shadow-lg border border-[var(--primary-color)] overflow-hidden max-w-md mx-auto mb-6">
+    <div className="bg-black text-white rounded-xl shadow-lg border border-[var(--primary-color)] overflow-hidden max-w-md mx-auto mb-6">
       <div className="p-4">
         <div className="flex items-center space-x-4">
           {userPic ? (
@@ -100,20 +105,49 @@ const Post = ({
           ) : (
             <User className="w-10 h-10 text-[var(--primary-color)]" />
           )}
-          <h2 className="font-semibold text-[var(--primary-color)] text-2xl">{userName}</h2>
+          <h2
+            className="font-semibold text-[var(--primary-color)] text-2xl cursor-pointer"
+            onClick={() => {
+              if (userId && userId !== currentUserId) {
+                navigate(`/profile/${userId}`);
+              }
+            }}
+          >
+            {userName}
+          </h2>
         </div>
-        <p className="mt-2 text-black break-words">{description}</p>
+        <p className="mt-2 break-words">{description}</p>
       </div>
 
-      {file && (
+      {/* Conditional rendering for fileType */}
+      {fileType === "image" && file && (
         <div className="w-full">
-          <img src={file} alt="Post" className="w-full object-cover" />
+          <img
+            src={`http://localhost:3000${file}`}
+            alt="Post"
+            className="w-full object-cover"
+          />
+        </div>
+      )}
+      {fileType === "video" && file && (
+        <div className="w-full">
+          <video
+            src={`http://localhost:3000${file}`}
+            controls
+            className="w-full object-cover"
+          />
         </div>
       )}
 
-      <div className="p-4 border-t border-gray-800 flex justify-between text-black text-sm">
+      {fileType === "text" && (
+        <div className="p-4">
+          <p className="text-gray-300">{description}</p>
+        </div>
+      )}
+
+      <div className="p-4 border-t border-gray-800 flex justify-between text-sm">
         <span
-          className="flex items-center gap-1 cursor-pointer  text-[var(--primary-color)]"
+          className="flex items-center gap-1 cursor-pointer text-[var(--primary-color)]"
           onClick={handleLikeToggle}
         >
           <ThumbsUp
@@ -124,27 +158,24 @@ const Post = ({
           />
           {likeCount}
         </span>
-
         <span
-          className="flex items-center gap-1 cursor-pointer"
+          className="flex items-center gap-1 cursor-pointer text-[var(--primary-color)]"
           onClick={toggleComments}
         >
-          <span
-            className="flex items-center gap-1 cursor-pointer text-[var(--primary-color)]"
-            onClick={toggleComments}
-          >
-            <MessageSquare size={16} className={`${
+          <MessageSquare
+            size={16}
+            className={`${
               liked ? "text-[var(--primary-color)]" : "text-gray-400"
-            }`}/>
-            {commentList.length}
-          </span>
+            }`}
+          />
+          {commentList.length}
         </span>
       </div>
 
       {showComments && (
         <div className="px-4 pb-4">
           <textarea
-            className="w-full p-2 rounded bg-white text-black border border-[var(--primary-color)]"
+            className="w-full p-2 rounded bg-black text-white border border-[var(--primary-color)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
             rows="2"
             placeholder="Write your comment..."
             value={newComment}
@@ -152,7 +183,7 @@ const Post = ({
           />
           <button
             onClick={handleCommentPost}
-            className="mt-2 text-[var(--primary-color)] border-[var(--primary-color)] bg-white px-4 py-1 rounded hover:bg-[var(--primary-color)] hover:text-white transition duration-200"
+            className="mt-2 text-black border border-[var(--primary-color)] bg-[var(--primary-color)] px-4 py-1 rounded hover:bg-transparent hover:text-[var(--primary-color)] transition duration-200"
           >
             Post
           </button>
@@ -160,7 +191,9 @@ const Post = ({
           <div className="mt-4 space-y-2">
             {commentList.map((comment, index) => (
               <div key={index} className="text-sm">
-                <span className="font-semibold">{comment.userName}:</span>{" "}
+                <span className="font-semibold text-[var(--primary-color)]">
+                  {comment.userName}:
+                </span>{" "}
                 {comment.text}
               </div>
             ))}

@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext"; // Import AuthContext
+import { useAuth } from "../../contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth(); // Use the login function from AuthContext
   const navigate = useNavigate();
+  const {user , setUser } = useAuth();
 
-  const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google";
-  };
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
@@ -26,8 +23,8 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("token", data.token); // Store token in localStorage
-        login(data.user, data.token); // Save the user's data and token in AuthContext
+        localStorage.setItem("token", data.token);
+        setUser(data.user, data.token) // Store token in localStorage
         navigate("/profile"); // Redirect to the UserProfile page
       } else {
         console.error("Login failed");
@@ -94,14 +91,7 @@ const Login = () => {
             </button>
           </div>
         </form>
-        <div>
-          <button
-            onClick={handleGoogleLogin}
-            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Login with Google
-          </button>
-        </div>
+
       </div>
     </div>
   );

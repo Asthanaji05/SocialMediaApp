@@ -9,19 +9,22 @@ import {
   unlikePost,
   addComment,
 } from "../controllers/postController.js";
+import { upload } from "../middleware/uploadMiddleware.js"; // Import multer middleware for file uploads
 
 const router = express.Router();
 
 // ✅ Create Post & Story
-router.post("/createPost", createPost);
-router.post("/createStory", createStory); // ✅ Added Story creation route
+router.post("/createPost", upload.single("file"), createPost); // File upload for posts
+router.post("/createStory", upload.single("file"), createStory); // File upload for stories
 
 // ✅ Fetch Data
-router.get("/fetchAllPosts", fetchAllPosts);
-router.get("/fetchAllStories", fetchAllStories);
-router.post("/fetchUserDetails", fetchUserDetails); // ✅ Combined Name & Image fetch
+router.get("/fetchAllPosts", fetchAllPosts); // Fetch all posts
+router.get("/fetchAllStories", fetchAllStories); // Fetch all stories
+router.post("/fetchUserDetails", fetchUserDetails); // Fetch user details (name + image)
 
-router.post("/like", likePost);
-router.post("/unlike", unlikePost);
-router.post("/comment", addComment);
+// ✅ Like, Unlike, and Comment
+router.post("/like", likePost); // Like a post
+router.post("/unlike", unlikePost); // Unlike a post
+router.post("/comment", addComment); // Add a comment to a post
+
 export default router;

@@ -14,7 +14,10 @@ import Feed from "./pages/Feed";
 import Story from "./components/Feed/Story";
 import Post from "./components/Feed/Post";
 import ChatPage from "./pages/ChatPage.jsx";
+import MyNetwork from "./pages/MyNetwork";
+
 import { ThemeProvider } from "./contexts/ThemeContext";
+
 function App() {
   return (
     <ThemeProvider>
@@ -33,6 +36,8 @@ function App() {
             <Route path="/feed/post" element={<Post />} />
             <Route path="/feed/story" element={<Story />} />
             <Route path="/chat" element={<ChatPage />} />
+            <Route path="/my-network" element={<MyNetwork />} />
+            <Route path="/my-network/:userId" element={<OtherUserProfile />} />
 
           </Routes>
           <Footer />

@@ -12,18 +12,22 @@ const MessageInput = ({ onSendMessage }) => {
   };
 
   return (
-    <form onSubmit={handleSendMessage} style={{ marginTop: "10px" }}>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type a message..."
-        style={{ width: "80%", padding: "10px" }}
-      />
-      <button type="submit" style={{ padding: "10px" }}>
-        Send
-      </button>
-    </form>
+<form onSubmit={handleSendMessage} className="flex items-center gap-2 mt-4">
+  <input
+    type="text"
+    value={message}
+    onChange={(e) => setMessage(e.target.value)}
+    placeholder="Type a message..."
+    className="flex-1 h-10 bg-gray-100 rounded-full px-4 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
+  />
+  <button
+    type="submit"
+    className="bg-[var(--primary-color)] text-white px-4 py-2 rounded-full hover:opacity-90 transition"
+  >
+    Send
+  </button>
+</form>
+
   );
 };
 

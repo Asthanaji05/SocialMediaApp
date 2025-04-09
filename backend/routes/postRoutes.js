@@ -8,6 +8,10 @@ import {
   likePost,
   unlikePost,
   addComment,
+  deletePost,
+  editPost,
+  savePost,
+  unsavePost,
 } from "../controllers/postController.js";
 import { upload } from "../middleware/uploadMiddleware.js"; // Import multer middleware for file uploads
 
@@ -26,5 +30,17 @@ router.post("/fetchUserDetails", fetchUserDetails); // Fetch user details (name 
 router.post("/like", likePost); // Like a post
 router.post("/unlike", unlikePost); // Unlike a post
 router.post("/comment", addComment); // Add a comment to a post
+
+// delete or edit post
+router.delete("/deletePost", deletePost); // Delete a post
+router.put("/editPost", editPost); // Edit a post
+
+// save 
+router.post('/save', savePost);
+router.post('/unsave', unsavePost);
+
+
+
+
 
 export default router;

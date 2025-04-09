@@ -7,6 +7,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState("");
   const {user , setUser } = useAuth();
 
 
@@ -24,13 +25,18 @@ const Login = () => {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        setUser(data.user, data.token) // Store token in localStorage
+        // setUser(data.user, data.token) // Store token in localStorage
+        setUser({ ...data.user, token: data.token });
+
         navigate("/profile"); // Redirect to the UserProfile page
       } else {
-        console.error("Login failed");
+        const errData = await response.json(); // 🔥 get error message
+        setError(errData.message || "Login failed"); // 👈 show in frontend
+        console.error("Login failed:", errData.message);
       }
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed");
+      console.error("Error:", err);
     }
   };
 
@@ -91,6 +97,8 @@ const Login = () => {
             </button>
           </div>
         </form>
+        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
 
       </div>
     </div>

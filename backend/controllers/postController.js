@@ -155,3 +155,135 @@ export const addComment = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+// get post for a user
+// 🔥 Fetch latest 5 posts by a user
+export const fetchUserTopPosts = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const posts = await Post.find({ userId: userId })
+      .sort({ createdAt: -1 })
+      .limit(5);
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error("Fetch top posts error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+// delete post
+export const deletePost = async (req, res) => {
+  const { postId, userId } = req.body;
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    if (post.userId.toString() !== userId) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    await Post.findByIdAndDelete(postId);
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    console.error("Delete post error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// edit post
+export const editPost = async (req, res) => {
+  const { postId, userId, description } = req.body;
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    if (post.userId.toString() !== userId) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    post.description = description || post.description;
+    await post.save();
+
+    res.status(200).json({ message: "Post updated", post });
+  } catch (error) {
+    console.error("Edit post error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// POST /posts/save
+export const savePost = async (req, res) => {
+  try {
+    const { userId, postId } = req.body;
+
+    // Add the post to the user's savedPosts array
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { savedPosts: postId } }, // Prevent duplicates
+      { new: true } // Return the updated user
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res
+      .status(200)
+      .json({ message: "Post saved", savedPosts: user.savedPosts });
+  } catch (err) {
+    console.error("Save post error:", err);
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
+};
+
+// POST /posts/unsave
+export const unsavePost = async (req, res) => {
+  try {
+    const { userId, postId } = req.body;
+
+    // Remove the post from the user's savedPosts array
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { savedPosts: postId } }, // 👈 yeh line daalo
+      { new: true }
+    ).populate({
+      path: "savedPosts",
+      populate: {
+        path: "userId",
+        select: "firstName lastName userName",
+      },
+    });
+    
+    
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res
+      .status(200)
+      .json({ message: "Post unsaved", savedPosts: user.savedPosts });
+  } catch (err) {
+    console.error("Unsave post error:", err);
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
+};
+
+export const getSavedPosts = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId).populate({
+      path: "savedPosts",
+      populate: {
+        path: "userId", // post ka author
+        select: "firstName lastName userName image", // jo fields chahiye
+      },
+    });
+    
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json(user.savedPosts);
+  } catch (error) {
+    console.error("Error fetching saved posts:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

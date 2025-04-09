@@ -16,6 +16,8 @@ export const verifyToken = async (req, res, next) => {
 
       // Attach the user ID to the request object
       req.user = { userId: decoded.userId };
+      console.log("Incoming Token:", authHeader);
+      console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
       next();
     } catch (error) {
@@ -27,28 +29,4 @@ export const verifyToken = async (req, res, next) => {
   }
 };
 
-export const isAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return next(); // User authenticated hai, proceed karo
-    }
-    res.status(401).json({ message: "Unauthorized" });
-};
 
-export const authMiddleware = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Token missing or invalid" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
-    req.user = decoded; // Attach user info to request
-    next();
-  } catch (err) {
-    console.error("Token verification failed:", err.message);
-    return res.status(401).json({ message: "Token verification failed" });
-  }
-};

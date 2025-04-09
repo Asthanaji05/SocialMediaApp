@@ -86,7 +86,22 @@ const Feed = () => {
         {/* Posts Section */}
         <div className="space-y-6 mt-4">
           {posts.map((post, index) => (
-            <Post key={index} {...post} />
+            // 
+            // <Post key={index} {...post} />
+            <Post
+            key={index}
+            _id={post._id} // 👈 yahi missing tha
+            userId={post.userId}
+            fileType={post.fileType}
+            file={post.file}
+            description={post.description}
+            likes={post.likes}
+            comments={post.comments}
+            createdAt={post.createdAt}
+            userName={post.userName}
+            userPic={post.userPic}
+          />
+          
           ))}
         </div>
       </div>

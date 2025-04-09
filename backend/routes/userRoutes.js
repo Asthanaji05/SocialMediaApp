@@ -1,15 +1,42 @@
-import express from 'express';
-import { getUsers, getUserById, createUser, updateUser, deleteUser,loginUser, getUserProfile , followUser , unfollowUser , getFollowers, getFollowing , getUserProfileByEmail, getUserProfileByUsername, getFollowingUsers} from '../controllers/userController.js';
-import { verifyToken } from '../middleware/authMiddleware.js'; // Import the verifyToken middleware
+import express from "express";
+import {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+  loginUser,
+  getUserProfile,
+  followUser,
+  unfollowUser,
+  getFollowers,
+  getFollowing,
+  getUserProfileByEmail,
+  getUserProfileByUsername,
+  getFollowingUsers,
+  searchUsers,
+
+} from "../controllers/userController.js";
+import { fetchUserTopPosts as getUserTopPosts,   getSavedPosts } from "../controllers/postController.js"; // Import the getUserTopPosts function
+import { verifyToken } from "../middleware/authMiddleware.js"; // Import the verifyToken middleware
 // import { isAuthenticated } from '../middleware/authMiddleware.js'; // Import the isAuthenticated middleware
 const router = express.Router();
 // User Profile Route
 router.get("/profile", verifyToken, getUserProfile);
-router.get('/', getUsers);
-router.get('/:id', getUserById);
-router.post('/', createUser);
-router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
+// route
+router.get("/search", verifyToken, searchUsers);
+// In routes/userRoutes.js
+// router.get('/:id/saved-posts', verifyToken, getSavedPosts);
+
+// saved posts
+router.get("/:userId/saved-posts/",  getSavedPosts);
+
+
+router.get("/", getUsers);
+router.get("/:id", getUserById);
+router.post("/", createUser);
+router.put("/:id", updateUser);
+router.delete("/:id", deleteUser);
 // Login Route
 router.post("/login", loginUser);
 // Follow a user
@@ -28,6 +55,9 @@ router.get("/profile/:username", verifyToken, getUserProfileByUsername);
 router.get("/profile/:email", verifyToken, getUserProfileByEmail);
 // Get following users of a user
 router.get("/:userId/following", verifyToken, getFollowingUsers);
+// get top posts
+router.get("/top-posts/:userId", verifyToken, getUserTopPosts);
+
 
 
 export default router;

@@ -118,6 +118,8 @@ export const deleteUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+
+
   // Check if both email and password are provided
   if (!email || !password) {
     return res.status(400).json({ message: "Email and password are required" });
@@ -323,3 +325,28 @@ export const getFollowingUsers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// controller
+// controllers/userController.js
+
+export const searchUsers = async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ message: "Query parameter is missing" });
+  }
+
+  try {
+    // Perform a case-insensitive search on the `userName` field
+    const users = await User.find({
+      userName: { $regex: query, $options: "i" }, // Case-insensitive regex search
+    }).select("userName _id"); // Only return `userName` and `_id`
+
+    res.status(200).json(users);
+  } catch (err) {
+    console.error("Error in searchUsers:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+

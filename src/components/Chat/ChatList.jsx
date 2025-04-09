@@ -29,68 +29,56 @@ const ChatList = ({ chats, following, userId, onCreateChat, onSelectChat }) => {
   }, [user]);
 
   return (
-    <div style={{ width: "250px", borderRight: "1px solid #ccc", padding: "10px" }}>
-    <h3>Chats</h3>
-    {uniqueChats.length > 0 ? (
-      uniqueChats.map((chat) => (
-        <div
-          key={chat._id}
-          onClick={() => onSelectChat(chat)}
-          style={{
-            cursor: "pointer",
-            marginBottom: "10px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <img
-            src={
-              chat.participants.find((p) => p._id !== userId)?.image ||
-              "https://placehold.co/30x30"
-            }
-            alt="avatar"
-            width="30"
-            height="30"
-            style={{ borderRadius: "50%", marginRight: "10px" }}
-          />
-          <span>
-            {chat.participants
-              .filter((p) => p._id !== userId)
-              .map((p) => p.firstName)
-              .join(", ")}
-          </span>
-        </div>
-      ))
-    ) : (
-      <p>No chats available</p>
-    )}
-    <h3>Following</h3>
-    {following.length > 0 ? (
-      following.map((u) => (
-        <div
-          key={u._id}
-          onClick={() => onCreateChat(u._id)}
-          style={{
-            cursor: "pointer",
-            marginBottom: "10px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <img
-            src={u.image || "https://placehold.co/30x30"}
-            alt="avatar"
-            width="30"
-            height="30"
-            style={{ borderRadius: "50%", marginRight: "10px" }}
-          />
-          <span>{u.firstName} ({u.userName})</span>
-        </div>
-      ))
-    ) : (
-      <p>No following users</p>
-    )}
-  </div>
+<div className="w-64 h-screen bg-black text-white p-4">
+  <h3 className="text-lg font-semibold mb-4">Chats</h3>
+  {uniqueChats.length > 0 ? (
+    uniqueChats.map((chat) => (
+      <div
+        key={chat._id}
+        onClick={() => onSelectChat(chat)}
+        className="flex items-center mb-3 cursor-pointer hover:bg-slate-700 p-2 rounded-lg"
+      >
+        <img
+          src={
+            chat.participants.find((p) => p._id !== userId)?.image ||
+            "https://picsum.photos/30/30"
+          }
+          alt="avatar"
+          className="w-8 h-8 rounded-full mr-3"
+        />
+        <span className="text-sm">
+          {chat.participants
+            .filter((p) => p._id !== userId)
+            .map((p) => p.firstName)
+            .join(", ")}
+        </span>
+      </div>
+    ))
+  ) : (
+    <p className="text-sm text-gray-400">No chats available</p>
+  )}
+
+  <h3 className="text-lg font-semibold mt-6 mb-4">Following</h3>
+  {following.length > 0 ? (
+    following.map((u) => (
+      <div
+        key={u._id}
+        onClick={() => onCreateChat(u._id)}
+        className="flex items-center mb-3 cursor-pointer hover:bg-slate-700 p-2 rounded-lg"
+      >
+        <img
+          src={u.image || "https://picsum.photos/30/30"}
+          alt="avatar"
+          className="w-8 h-8 rounded-full mr-3"
+        />
+        <span className="text-sm">{u.firstName} ({u.userName})</span>
+      </div>
+    ))
+  ) : (
+    <p className="text-sm text-gray-400">No following users</p>
+  )}
+</div>
+
 );
 };
 

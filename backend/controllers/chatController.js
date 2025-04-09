@@ -12,7 +12,7 @@ export const getUserChats = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};;
+};
 
 // Create a new chat
 export const createChat = async (req, res) => {
@@ -50,7 +50,7 @@ export const sendMessage = async (req, res) => {
   }
 
   try {
-    const chat = await Chats.findById(chatId);
+    const chat = await Chats.findById(chatId).populate("messages.sender", "userName"); // 👈 Yeh line add karo
     if (!chat) {
       return res.status(404).json({ message: "Chat not found." });
     }
@@ -58,8 +58,10 @@ export const sendMessage = async (req, res) => {
     const newMessage = { sender, content };
     chat.messages.push(newMessage);
     await chat.save();
+    const updatedChat = await Chats.findById(chatId).populate("messages.sender", "userName");
+    const latestMessage = updatedChat.messages.at(-1);
+    res.status(200).json(latestMessage); // Send last message with populated sender
 
-    res.status(200).json(newMessage);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

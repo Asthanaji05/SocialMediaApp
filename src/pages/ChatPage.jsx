@@ -45,7 +45,7 @@ const ChatPage = () => {
 
     fetchChats();
     fetchFollowing();
-  }, [user]);
+  }, [user, setFollowing]);
 
   const createChat = async (userId) => {
     console.log("Creating chat with userId:", userId);
@@ -95,11 +95,19 @@ const ChatPage = () => {
       console.log("Message sent successfully:", response.data);
 
       // Update the selected chat with the new message
-      setSelectedChat((prevChat) => ({
-        ...prevChat,
-        messages: [...prevChat.messages, response.data],
-      }));
+      // setSelectedChat((prevChat) => ({
+      //   ...prevChat,
+      //   messages: [...prevChat.messages, response.data],
+      // }));
 
+      const updatedChat = {
+        ...selectedChat,
+        messages: [...selectedChat.messages, response.data],
+      };
+      
+      setSelectedChat(null);
+      setTimeout(() => setSelectedChat(updatedChat), 0);
+      
       // Update the chats state with the new message
       setChats((prevChats) =>
         prevChats.map((chat) =>
@@ -126,7 +134,7 @@ const ChatPage = () => {
           />
           <ChatWindow
             selectedChat={selectedChat}
-            userId={user._id}
+            currentUserId={user._id}
             onSendMessage={sendMessage}
           />
         </>

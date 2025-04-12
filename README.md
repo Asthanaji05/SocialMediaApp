@@ -3,6 +3,7 @@
 **Maitrilok** is a full-featured social media platform crafted with the MERN stack. It empowers users to connect, share, and interact in real-time through a secure and scalable architecture. Designed with role-based features and modern microservices, Maitrilok ensures an intuitive and responsive social experience.
 
 ---
+![Feed Preview](./Feed.png)
 
 ---
 

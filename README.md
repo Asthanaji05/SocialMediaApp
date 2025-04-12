@@ -4,6 +4,13 @@
 
 ---
 ![Feed Preview](./Feed.png)
+![Post Preview](./Post.png)
+
+See More ...
+![Profile Preview](./Profile.png)
+![LOGIN Preview](./Login.png)
+![SignUp Preview](./Signup.png)
+
 
 ---
 

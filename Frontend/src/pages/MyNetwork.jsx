@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { Link } from "react-router-dom";
 import Loading from "../components/UI/Loading";
+import API from "../utils/api";
 
 const MyNetwork = () => {
   const { user } = useAuth();
@@ -23,8 +24,7 @@ const MyNetwork = () => {
     const fetchFollowing = async () => {
       try {
         const token = localStorage.getItem("token"); // Retrieve the token
-        const res = await axios.get(
-          `http://localhost:3000/users/${user._id}/following`,
+        const res = await API.get(`/users/${user._id}/following`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add the token to the request headers
@@ -34,7 +34,7 @@ const MyNetwork = () => {
         setFollowingUsers(res.data);
 
         const postPromises = res.data.map((u) =>
-          axios.get(`http://localhost:3000/users/top-posts/${u._id}`, {
+          API.get(`/users/top-posts/${u._id}`, {
             headers: { Authorization: `Bearer ${token}` },
           })
         );

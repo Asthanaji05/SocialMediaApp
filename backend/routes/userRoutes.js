@@ -15,7 +15,9 @@ import {
   getUserProfileByUsername,
   getFollowingUsers,
   searchUsers,
-
+  googleLogin,
+  googleSignup,
+  checkGoogleUser
 } from "../controllers/userController.js";
 import { fetchUserTopPosts as getUserTopPosts,   getSavedPosts } from "../controllers/postController.js"; // Import the getUserTopPosts function
 import { verifyToken } from "../middleware/authMiddleware.js"; // Import the verifyToken middleware
@@ -58,6 +60,14 @@ router.get("/:userId/following", verifyToken, getFollowingUsers);
 // get top posts
 router.get("/top-posts/:userId", verifyToken, getUserTopPosts);
 
+// Google Login Route
+router.post('/google-login', googleLogin);
+
+// Google Signup Route
+router.post('/google-signup', googleSignup);
+
+// Check if Google User Exists Route
+router.post('/check-google-user', checkGoogleUser);
 
 
 export default router;

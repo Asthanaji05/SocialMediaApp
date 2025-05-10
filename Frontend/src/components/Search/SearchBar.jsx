@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import API from "../../utils/api.js"
 const SearchBar = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -16,7 +16,7 @@ const SearchBar = () => {
       }
     
       try {
-        const res = await fetch(`http://localhost:3000/users/search?query=${query}`, {
+        const res = await fetch(`${API.defaults.baseURL}/users/search?query=${query}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
     

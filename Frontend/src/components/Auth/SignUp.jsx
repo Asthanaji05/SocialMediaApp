@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Mail, Lock, User, ArrowRight } from "lucide-react";
 import { Link,  } from "react-router-dom";
 import axios from "axios";
+import API from "../../utils/api.js";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -33,7 +34,7 @@ const SignUp = () => {
     try {
       // Sending form data to the backend API for user registration
       const [firstName, lastName] = formData.fullName.split(" ");
-      const response = await axios.post("http://localhost:3000/users/", {
+      const response = await API.post("/users/", {
         firstName,
         lastName,
         email: formData.email,

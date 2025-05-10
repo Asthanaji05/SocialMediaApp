@@ -1,5 +1,6 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import API from "../../utils/api.js";
 const Logout = () => {
   const { logout } = useAuth();
   const handleLogout = async () => {

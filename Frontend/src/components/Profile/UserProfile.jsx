@@ -5,7 +5,7 @@ import { Settings, MapPin, Trash2 } from "lucide-react";
 import Loading from "../UI/Loading";
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "axios";
-
+import API from "../../utils/api";
 const UserProfile = () => {
   const { user, setUser,logout } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -18,8 +18,8 @@ useEffect(() => {
   const fetchSavedPosts = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(
-        `http://localhost:3000/users/${user._id}/saved-posts`,
+      const res = await API.get(
+        `/users/${user._id}/saved-posts`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -38,8 +38,8 @@ useEffect(() => {
     const fetchTopPosts = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `http://localhost:3000/users/top-posts/${user._id}`,
+        const res = await API.get(
+          `/users/top-posts/${user._id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -58,8 +58,8 @@ useEffect(() => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const response = await axios.get(
-            "http://localhost:3000/users/profile",
+          const response = await API.get(
+            "/users/profile",
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -81,8 +81,8 @@ useEffect(() => {
     const fetchFollowingUsers = async () => {
       try {
         const token = localStorage.getItem("token"); // Retrieve the token
-        const res = await axios.get(
-          `http://localhost:3000/users/${user._id}/following`,
+        const res = await API.get(
+          `/users/${user._id}/following`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add the token to the request headers
@@ -102,7 +102,7 @@ useEffect(() => {
     try {
       const { logout } = useAuth();
       const userId = user?._id;
-      await axios.delete(`http://localhost:3000/users/${userId}`);
+      await API.delete(`/users/${userId}`);
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.clear();

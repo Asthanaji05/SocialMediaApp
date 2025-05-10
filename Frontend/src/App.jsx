@@ -15,13 +15,15 @@ import Story from "./components/Feed/Story";
 import Post from "./components/Feed/Post";
 import ChatPage from "./pages/ChatPage.jsx";
 import MyNetwork from "./pages/MyNetwork";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import GoogleSignup from "./components/Auth/GoogleSignUp.jsx";
 
 function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}> 
+              <AuthProvider>
         <Router>
           <NavBar /> {/* Global NavBar */}
           <Routes>
@@ -32,6 +34,7 @@ function App() {
             <Route path="/profile/:userId" element={<OtherUserProfile />} />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/edit-profile" element={<EditProfile />} />
+            <Route path="/google-signup" element={<GoogleSignup />} />
             <Route path="/feed" element={<Feed />} />
             <Route path="/feed/post" element={<Post />} />
             <Route path="/feed/story" element={<Story />} />
@@ -43,6 +46,8 @@ function App() {
           <Footer />
         </Router>
       </AuthProvider>
+      </GoogleOAuthProvider>
+
     </ThemeProvider>
 
   );

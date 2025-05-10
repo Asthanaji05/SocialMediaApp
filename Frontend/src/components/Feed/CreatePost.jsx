@@ -6,6 +6,7 @@ import storage from "../../firebaseConfig";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/UI/Loading";
+import API from "../../utils/api.js";
 
 const CreatePost = ({ onPostCreated = () => {} }) => {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ const CreatePost = ({ onPostCreated = () => {} }) => {
         formData.append("fileType", "text"); // Default to "text" if no file is uploaded
       }
   
-      const res = await axios.post("http://localhost:3000/posts/createPost", formData, {
+      const res = await API.post("/posts/createPost", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
   

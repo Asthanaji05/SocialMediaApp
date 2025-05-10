@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import API from "../../utils/api.js";
 const EditProfile = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
@@ -16,7 +16,7 @@ const EditProfile = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:3000/users/profile", {
+        const res = await fetch(`${API.defaults.baseURL}/users/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -36,7 +36,7 @@ const EditProfile = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:3000/users/${userData._id}`, {
+      const res = await fetch(`${API.defaults.baseURL}/users/${userData._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

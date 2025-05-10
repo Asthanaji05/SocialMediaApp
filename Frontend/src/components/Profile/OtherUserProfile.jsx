@@ -7,6 +7,7 @@ import axios from "axios";
 import { useTheme } from "../../contexts/ThemeContext";
 
 import { useParams } from "react-router-dom";
+import API from "../../utils/api";
 
 const OtherUserProfile = () => {
   const { userId } = useParams();
@@ -20,8 +21,8 @@ const OtherUserProfile = () => {
       setLoading(true);
       const yourToken = localStorage.getItem("token"); // Get the JWT token from localStorage
       try {
-        const response = await axios.get(
-          `http://localhost:3000/users/${userId}`,
+        const response = await API.get(
+          `/users/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${yourToken}`, // token from context or localStorage
@@ -54,8 +55,8 @@ const OtherUserProfile = () => {
     const token = localStorage.getItem("token");
     try {
       const endpoint = isFollowing ? "unfollow" : "follow";
-      await axios.post(
-        `http://localhost:3000/users/${endpoint}/${otherUser._id}`,
+      await API.post(
+        `/users/${endpoint}/${otherUser._id}`,
         { userId: user._id },
         {
           headers: {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
 import axios from "axios";
-
+import API from "../../utils/api.js";
 import {
   ThumbsUp,
   MessageSquare,
@@ -45,8 +45,8 @@ const Post = ({
   useEffect(() => {
     const checkSavedStatus = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:3000/users/${currentUserId}/saved-posts`
+        const res = await API.get(
+          `/users/${currentUserId}/saved-posts`
         );
         const savedPosts = res.data.map((post) => post._id);
         setSaved(savedPosts.includes(_id));
@@ -62,7 +62,7 @@ const Post = ({
 
   const handleLike = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/posts/like", {
+      const res = await API.post("/posts/like", {
         postId: _id,
         userId: currentUserId,
       });
@@ -75,7 +75,7 @@ const Post = ({
 
   const handleUnlike = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/posts/unlike", {
+      const res = await API.post("/posts/unlike", {
         postId: _id,
         userId: currentUserId,
       });
@@ -88,7 +88,7 @@ const Post = ({
 
   const handleDeletePost = async () => {
     try {
-      await axios.delete("http://localhost:3000/posts/deletePost", {
+      await API.delete("/posts/deletePost", {
         data: { postId: _id, userId: currentUserId },
       });
       alert("Post deleted");
@@ -99,7 +99,7 @@ const Post = ({
 
   const handleEditPost = async () => {
     try {
-      await axios.put("http://localhost:3000/posts/editPost", {
+      await API.put("/posts/editPost", {
         postId: _id,
         userId: currentUserId,
         description: editedDescription,
@@ -121,7 +121,7 @@ const Post = ({
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
       const commentUserName = storedUser?.userName || "Anonymous";
-      const res = await axios.post("http://localhost:3000/posts/comment", {
+      const res = await API.post("/posts/comment", {
         postId: _id,
         userId: currentUserId,
         userName: commentUserName,
@@ -148,7 +148,7 @@ const Post = ({
 
   const handleSave = async () => {
     try {
-      await axios.post("http://localhost:3000/posts/save", {
+      await API.post("/posts/save", {
         postId: _id,
         userId: currentUserId,
       });
@@ -160,7 +160,7 @@ const Post = ({
 
   const handleUnsave = async () => {
     try {
-      await axios.post("http://localhost:3000/posts/unsave", {
+      await API.post("/posts/unsave", {
         postId: _id,
         userId: currentUserId,
       });
@@ -242,19 +242,23 @@ const Post = ({
             {fileType === "image" ? (
               <div className="relative w-full aspect-square overflow-hidden rounded-2xl">
                 <img
-                  src={`http://localhost:3000${file}`}
+                  
+                  src={`${API.defaults.baseURL}${file}`}
+
                   alt="Blur Background"
                   className="absolute top-0 left-0 w-full h-full object-cover filter blur-lg scale-110 z-0"
                 />
                 <img
-                  src={`http://localhost:3000${file}`}
+                  src={`${API.defaults.baseURL}${file}`}
+
                   alt="Post"
                   className="relative z-10 w-full h-full object-contain rounded-2xl"
                 />
               </div>
             ) : (
               <video
-                src={`http://localhost:3000${file}`}
+                src={`${API.defaults.baseURL}${file}`}
+
                 controls
                 className="w-full object-cover max-h-96 rounded"
               />

@@ -6,6 +6,8 @@ import CreatePost from "../components/Feed/CreatePost";
 import CreateStory from "../components/Feed/CreateStory";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
+import UserProfile from "../components/Profile/UserProfile"
+import API from "../utils/api";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -17,7 +19,7 @@ const Feed = () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const response = await axios.get("http://localhost:3000/users/profile", {
+          const response = await API.get("/users/profile", {
             headers: { Authorization: `Bearer ${token}` },
           });
           setUser(response.data);
@@ -26,7 +28,7 @@ const Feed = () => {
           setUser(null);
         }
       }
-      setLoading(false); // 👈 is line ko add karo
+      setLoading(false);
     };
   
     fetchUser();
@@ -35,7 +37,7 @@ const Feed = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/posts/fetchAllPosts");
+        const res = await API.get("/posts/fetchAllPosts");
         setPosts(res.data);
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -44,7 +46,7 @@ const Feed = () => {
 
     const fetchStories = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/posts/fetchAllStories");
+        const res = await API.get("/posts/fetchAllStories");
         setStories(res.data);
       } catch (error) {
         console.error("Error fetching stories:", error);
@@ -66,7 +68,8 @@ const Feed = () => {
   };
 
   return (
-    <div className="min-h-max p-4 bg-black">
+<>
+<div className="min-h-max p-4 bg-black">
       <div className="max-w-2xl mx-auto pt-20 px-4">
         {/* Show Create Story & Create Post Only if Logged In */}
         {user && (
@@ -86,11 +89,9 @@ const Feed = () => {
         {/* Posts Section */}
         <div className="space-y-6 mt-4">
           {posts.map((post, index) => (
-            // 
-            // <Post key={index} {...post} />
             <Post
             key={index}
-            _id={post._id} // 👈 yahi missing tha
+            _id={post._id} 
             userId={post.userId}
             fileType={post.fileType}
             file={post.file}
@@ -106,6 +107,7 @@ const Feed = () => {
         </div>
       </div>
     </div>
+</>
   );
 };
 

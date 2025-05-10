@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
+import API from "../../utils/api.js";
 
 const CreateStory = ({ onStoryCreated }) => {
   const { user } = useAuth();
@@ -18,7 +19,7 @@ const CreateStory = ({ onStoryCreated }) => {
     if (!storyData.file) return alert("Story file is required!");
 
     try {
-      const res = await axios.post("http://localhost:3000/posts/createStory", storyData);
+      const res = await API.post("/posts/createStory", storyData);
       onStoryCreated(res.data);
       setStoryData({ file: "" });
     } catch (error) {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
+import API from "../../utils/api.js";
 
 const ChatList = ({ chats, following, userId, onCreateChat, onSelectChat }) => {
   const { user } = useAuth();
@@ -14,7 +15,7 @@ const ChatList = ({ chats, following, userId, onCreateChat, onSelectChat }) => {
     const fetchFollowingUsers = async () => {
       try {
         const token = localStorage.getItem("token"); // Retrieve the token
-        const res = await axios.get(`http://localhost:3000/users/${user._id}/following`, {
+        const res = await API.get(`/users/${user._id}/following`, {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the request headers
           },

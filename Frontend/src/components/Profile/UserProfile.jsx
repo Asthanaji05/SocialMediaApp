@@ -26,7 +26,7 @@ useEffect(() => {
       );
       setSavedPosts(res.data);
     } catch (err) {
-      console.error("Error fetching saved posts:", err);
+      // console.error("Error fetching saved posts:", err);
     }
   };
 
@@ -46,7 +46,7 @@ useEffect(() => {
         );
         setTopPosts(res.data);
       } catch (err) {
-        console.error("Error fetching top posts:", err);
+        // console.error("Error fetching top posts:", err);
       }
     };
 
@@ -67,7 +67,7 @@ useEffect(() => {
           setUser(response.data);
           localStorage.setItem("user", JSON.stringify(response.data));
         } catch (error) {
-          console.error("Error fetching user:", error);
+          // console.error("Error fetching user:", error);
           setUser(null);
         }
       }
@@ -91,7 +91,7 @@ useEffect(() => {
         );
         setFollowingUsers(res.data);
       } catch (err) {
-        console.error("Error fetching following users:", err);
+        // console.error("Error fetching following users:", err);
       }
     };
 
@@ -109,7 +109,7 @@ useEffect(() => {
       logout();
       navigate("/signup"); // or home/login
     } catch (error) {
-      console.error("Delete error:", error);
+      // console.error("Delete error:", error);
     }
   };
 

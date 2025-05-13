@@ -16,8 +16,8 @@ export const verifyToken = async (req, res, next) => {
 
       // Attach the user ID to the request object
       req.user = { userId: decoded.userId };
-      console.log("Incoming Token:", authHeader);
-      console.log("JWT_SECRET:", process.env.JWT_SECRET);
+      // console.log("Incoming Token:", authHeader);
+      // console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
       next();
     } catch (error) {

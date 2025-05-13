@@ -67,7 +67,7 @@ const Login = () => {
       });
 
       const data = await res.json();
-      console.log("Google login response:", data);
+      // console.log("Google login response:", data);
 
       if (res.status !== 200) {
         if (res.status === 302 && data.redirect === "/auth/google/signup") {
@@ -81,10 +81,10 @@ const Login = () => {
 
       // If user exists and Google login was successful, store the token and user info
       localStorage.setItem("token", data.token);
-      console.log("Setting user and navigating...");
+      // console.log("Setting user and navigating...");
       setUser({ ...data.user, token: data.token });
       navigate("/profile");
-      console.log("Navigation called");
+      // console.log("Navigation called");
 
       // Redirect to the profile page
       navigate("/profile");

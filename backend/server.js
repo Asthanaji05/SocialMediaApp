@@ -43,13 +43,13 @@ const listRoutes = (app) => {
       if (middleware.route) {
         // Clean route path
         const routePath = middleware.route.path;
-        console.log(`${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${routePath}`);
+        // console.log(`${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${routePath}`);
       } else if (middleware.name === 'router') {
         // If it's a router, loop through its stack and print routes
         middleware.handle.stack.forEach((handler) => {
           if (handler.route) {
             const routePath = handler.route.path;
-            console.log(`${Object.keys(handler.route.methods).join(', ').toUpperCase()} ${routePath}`);
+            // console.log(`${Object.keys(handler.route.methods).join(', ').toUpperCase()} ${routePath}`);
           }
         });
       }
@@ -57,7 +57,7 @@ const listRoutes = (app) => {
   };
   
   // Log all routes
-  listRoutes(app);
+  // listRoutes(app);
   
   
   

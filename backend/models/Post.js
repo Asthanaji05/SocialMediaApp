@@ -22,6 +22,7 @@ const postSchema = new mongoose.Schema(
         createdAt: { type: Date, default: Date.now },
       },
     ],
+    shareToken: { type: String, default: null },
   },
   { timestamps: true }
 );

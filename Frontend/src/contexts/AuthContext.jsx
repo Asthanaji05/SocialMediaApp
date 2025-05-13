@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
           // console.log("User fetched:", response.data);
           setUser(response.data);
         } catch (error) {
-          console.error("Error fetching user:", error);
+          // console.error("Error fetching user:", error);
           setUser(null);
         }
       }

@@ -18,6 +18,7 @@ import MyNetwork from "./pages/MyNetwork";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import GoogleSignup from "./components/Auth/GoogleSignUp.jsx";
+import PostDetails from "./components/Feed/PostDetails";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="/feed" element={<Feed />} />
             <Route path="/feed/post" element={<Post />} />
             <Route path="/feed/story" element={<Story />} />
+            <Route path="/share/:token" element={<PostDetails  />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/my-network" element={<MyNetwork />} />
             <Route path="/my-network/:userId" element={<OtherUserProfile />} />

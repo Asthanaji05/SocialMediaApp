@@ -1,6 +1,8 @@
 import Post from "../models/Post.js";
 import Story from "../models/Story.js";
 import User from "../models/User.js";
+import jwt from "jsonwebtoken";
+const SECRET_KEY = "MaitriLokSecret";
 
 // 🔥 Fetch all posts (sorted by latest)
 export const fetchAllPosts = async (req, res) => {
@@ -65,6 +67,16 @@ export const createPost = async (req, res) => {
       comments: [],
     });
 
+    await newPost.save();
+    // ✅ Generate Share Token
+    const shareToken = jwt.sign(
+      { postId: newPost._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    // Save shareToken to post
+    newPost.shareToken = shareToken;
     await newPost.save();
     res
       .status(201)
@@ -252,8 +264,6 @@ export const unsavePost = async (req, res) => {
         select: "firstName lastName userName",
       },
     });
-    
-    
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -277,7 +287,6 @@ export const getSavedPosts = async (req, res) => {
         select: "firstName lastName userName image", // jo fields chahiye
       },
     });
-    
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -285,5 +294,71 @@ export const getSavedPosts = async (req, res) => {
   } catch (error) {
     console.error("Error fetching saved posts:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+const validateShareToken = (token) => {
+  try {
+    console.log("Token received:", token); // Log the token to see its format
+    if (!token || token.split(".").length !== 3) {
+      return res.status(400).json({ error: "Malformed token" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded token:", decoded);
+    return decoded?.postId;
+  } catch (error) {
+    console.error("Error verifying token:", error); // Log the error to see more details
+    return null;
+  }
+};
+
+// Assuming you have a function to validate the token
+export const getPostIdFromShareToken = async (req, res) => {
+  try {
+    const { token } = req.params;
+    // console.log("Received token:", token);
+
+    // Validate the token (you might need to decrypt it or use a different method)
+    const postId = await validateShareToken(token); // Implement the validation method
+    // console.log("Post ID from token:", postId);
+
+    if (!postId) {
+      return res.status(400).json({ error: "Invalid or expired share token" });
+    }
+
+    // Find the post using the postId
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    // Return the postId
+    res.status(200).json({ postId: postId });
+  } catch (error) {
+    console.error("Share Token error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const fetchPost = async (req, res) => {
+  const { postId } = req.params; // Get postId from the URL parameters
+  console.log("Post ID received:", postId); // Log the postId to see its format
+  try {
+    const post = await Post.findById(postId); // Find the post by ID
+
+    // If post doesn't exist, return 404
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    // Return the post with a 200 status code
+    res.status(200).json({ data: post });
+  } catch (error) {
+    console.error("Fetch post error:", error);
+
+    // If there's a server error, return 500
+    res.status(500).json({ error: "Server error" });
   }
 };

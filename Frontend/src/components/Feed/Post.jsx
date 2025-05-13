@@ -10,6 +10,7 @@ import {
   Edit3,
   Bookmark,
   BookmarkCheck,
+  Share2,
 } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +27,7 @@ const Post = ({
   comments,
   userId,
   createdAt,
+  shareToken,
 }) => {
   const { primaryColor } = useTheme();
   const [showComments, setShowComments] = useState(false);
@@ -45,9 +47,7 @@ const Post = ({
   useEffect(() => {
     const checkSavedStatus = async () => {
       try {
-        const res = await API.get(
-          `/users/${currentUserId}/saved-posts`
-        );
+        const res = await API.get(`/users/${currentUserId}/saved-posts`);
         const savedPosts = res.data.map((post) => post._id);
         setSaved(savedPosts.includes(_id));
       } catch (err) {
@@ -170,6 +170,43 @@ const Post = ({
     }
   };
 
+const handleSharePost = async () => {
+  try {
+    if (!shareToken) {
+      alert("Share token is missing!");
+      return;
+    }
+
+    console.log("Share Token:", shareToken);
+
+    // Make the API call to get post information
+    const res = await API.get(`posts/share/${shareToken}`);
+    
+    if (!res.data || !res.data.postId) {
+      throw new Error("Post not found");
+    }
+
+    // Construct the share link
+    const shareLink = `${window.location.origin}/share/${shareToken}`;
+    console.log("Share Link:", shareLink);
+
+    // Attempt to copy the share link to the clipboard
+    await navigator.clipboard.writeText(shareLink);
+    alert("Link copied to clipboard!");
+  } catch (error) {
+    console.error("Share error:", error);
+
+    // Display a more specific error message based on the failure
+    if (error.response && error.response.data && error.response.data.error) {
+      alert(`Error: ${error.response.data.error}`);
+    } else {
+      alert("An error occurred while sharing the post.");
+    }
+  }
+};
+
+
+
   return (
     <div className="grid grid-cols-3 bg-black text-white w-full max-w-2xl border border-[var(--primary-color)] rounded-3xl shadow-[var(--primary-color)] overflow-hidden">
       <div className="col-span-3 bg-[var(--primary-color)] text-black p-4 flex items-center justify-between rounded-t-3xl">
@@ -204,6 +241,14 @@ const Post = ({
             </p>
           </div>
         </div>
+        <div>
+          <button
+              className="cursor-pointer text-black"
+              onClick={handleSharePost}
+            >
+              <Share2 size={16} />
+            </button>
+        </div>
         {currentUserId === userId && (
           <div className="flex space-x-2">
             <Edit3
@@ -214,6 +259,8 @@ const Post = ({
               className="cursor-pointer text-black"
               onClick={handleDeletePost}
             />
+
+            
           </div>
         )}
       </div>
@@ -242,15 +289,12 @@ const Post = ({
             {fileType === "image" ? (
               <div className="relative w-full aspect-square overflow-hidden rounded-2xl">
                 <img
-                  
                   src={`${API.defaults.baseURL}${file}`}
-
                   alt="Blur Background"
                   className="absolute top-0 left-0 w-full h-full object-cover filter blur-lg scale-110 z-0"
                 />
                 <img
                   src={`${API.defaults.baseURL}${file}`}
-
                   alt="Post"
                   className="relative z-10 w-full h-full object-contain rounded-2xl"
                 />
@@ -258,7 +302,6 @@ const Post = ({
             ) : (
               <video
                 src={`${API.defaults.baseURL}${file}`}
-
                 controls
                 className="w-full object-cover max-h-96 rounded"
               />
@@ -331,7 +374,5 @@ const Post = ({
     </div>
   );
 };
-
-
 
 export default Post;

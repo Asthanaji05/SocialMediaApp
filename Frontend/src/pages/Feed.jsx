@@ -101,6 +101,7 @@ const Feed = () => {
             createdAt={post.createdAt}
             userName={post.userName}
             userPic={post.userPic}
+            shareToken ={post.shareToken}
           />
           
           ))}

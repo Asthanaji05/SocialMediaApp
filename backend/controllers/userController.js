@@ -32,7 +32,7 @@ export const createUser = async (req, res) => {
 
   // Check if all required fields are provided
   if (!email || !password || !firstName || !userName) {
-    console.log("Missing fields:", req.body); // Debugging
+    // console.log("Missing fields:", req.body);
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -40,12 +40,12 @@ export const createUser = async (req, res) => {
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log("User already exists:", existingUser); // Debugging
+      // console.log("User already exists:", existingUser); // Debugging
       return res.status(400).json({ message: "User already exists" });
     }
     const existingUsername = await User.findOne({ userName });
     if (existingUsername) {
-      console.log("UserName already taken:", existingUsername); // Debugging
+      // console.log("UserName already taken:", existingUsername); // Debugging
       return res.status(400).json({ message: "UserName already taken" });
     }
 
@@ -65,7 +65,7 @@ export const createUser = async (req, res) => {
     await user.save();
     // 🚒🚒🚒
     if (!user || !user._id) {
-      console.log("Error: User ID is missing!", user); // Debugging
+      // console.log("Error: User ID is missing!", user); // Debugging
       return res.status(400).json({ error: "User ID missing" });
     }
 
@@ -86,7 +86,7 @@ export const createUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error creating user:", error);
+    // console.error("Error creating user:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -153,7 +153,7 @@ export const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error during login:", error);
+    // console.error("Error during login:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -165,7 +165,7 @@ export const getUserProfile = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(200).json(user);
   } catch (error) {
-    console.error("Error fetching user profile:", error);
+    // console.error("Error fetching user profile:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -228,7 +228,7 @@ export const followUser = async (req, res) => {
 
     res.status(200).json({ message: "Followed successfully" });
   } catch (error) {
-    console.error("Error following user:", error);
+    // console.error("Error following user:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -253,7 +253,7 @@ export const unfollowUser = async (req, res) => {
 
     res.status(200).json({ message: "Unfollowed successfully" });
   } catch (error) {
-    console.error("Error unfollowing user:", error);
+    // console.error("Error unfollowing user:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -267,7 +267,7 @@ export const getFollowers = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(200).json(user.followers);
   } catch (error) {
-    console.error("Error fetching followers:", error);
+    // console.error("Error fetching followers:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -279,7 +279,7 @@ export const getFollowing = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(200).json(user.following);
   } catch (error) {
-    console.error("Error fetching following:", error);
+    // console.error("Error fetching following:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -292,7 +292,7 @@ export const getUserProfileByUsername = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(200).json(user);
   } catch (error) {
-    console.error("Error fetching user profile by username:", error);
+    // console.error("Error fetching user profile by username:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -304,7 +304,7 @@ export const getUserProfileByEmail = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(200).json(user);
   } catch (error) {
-    console.error("Error fetching user profile by email:", error);
+    // console.error("Error fetching user profile by email:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -346,7 +346,7 @@ export const searchUsers = async (req, res) => {
 
     res.status(200).json(users);
   } catch (err) {
-    console.error("Error in searchUsers:", err);
+    // console.error("Error in searchUsers:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
@@ -440,7 +440,7 @@ export const googleLogin = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Google login error:', error);
+    // console.error('Google login error:', error);
     res.status(500).json({ message: 'Server error', error });
   }
 };
@@ -496,7 +496,7 @@ export const googleSignup = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Error in Google signup:', error);
+    // console.error('Error in Google signup:', error);
     res.status(500).json({ message: 'Server error', error });
   }
 };
@@ -512,7 +512,7 @@ export const checkGoogleUser = async (req, res) => {
     }
     res.json({ exists: false });
   } catch (error) {
-    console.error('Error checking Google user:', error);
+    // console.error('Error checking Google user:', error);
     res.status(500).json({ message: 'Server error', error });
   }
 };

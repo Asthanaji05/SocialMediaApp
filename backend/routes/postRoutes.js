@@ -12,6 +12,8 @@ import {
   editPost,
   savePost,
   unsavePost,
+  getPostIdFromShareToken,
+  fetchPost,
 } from "../controllers/postController.js";
 import { upload } from "../middleware/uploadMiddleware.js"; // Import multer middleware for file uploads
 
@@ -38,7 +40,9 @@ router.put("/editPost", editPost); // Edit a post
 // save 
 router.post('/save', savePost);
 router.post('/unsave', unsavePost);
+router.get("/share/:token", getPostIdFromShareToken);
 
+router.get("/fetchPostById/:postId", fetchPost); // Fetch post by ID
 
 
 

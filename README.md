@@ -4,18 +4,6 @@
 
 ---
 
-# ⚠ All the reports of different phases are in `Reports` Folder
-![Feed Preview](./Feed.png)
-![Post Preview](./Post.png)
-
-See More ...
-![Profile Preview](./Profile.png)
-![LOGIN Preview](./Login.png)
-![SignUp Preview](./Signup.png)
-
-
----
-
 ## 🛠️ Tech Stack
 
 | Layer           | Technologies Used                       |

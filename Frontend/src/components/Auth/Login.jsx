@@ -150,11 +150,11 @@ const Login = () => {
           {/* Moscownpur ID - Primary Login */}
           {isSupabaseConfigured && (
             <div className="mb-6">
-              <Button
+<Button
                 type="button"
                 onClick={handleSupabaseLogin}
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-black text-base py-7 rounded-2xl shadow-[0_10px_30px_rgba(234,88,12,0.3)] transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest font-bungee disabled:opacity-50"
+                className="w-full bg-primary hover:opacity-90 text-black font-black text-base py-7 rounded-2xl shadow-[0_10px_30px_rgba(var(--primary-rgb),0.2)] transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest font-bungee disabled:opacity-50"
               >
                 <div className="relative">
                   <Radio className="w-5 h-5 text-white animate-pulse" />

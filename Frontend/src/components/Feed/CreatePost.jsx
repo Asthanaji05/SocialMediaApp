@@ -2,19 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 import { useAuth } from "../../contexts/AuthContext";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import storage from "../../firebaseConfig";
+
 import { useTheme } from "../../contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/UI/Loading";
 import API from "../../utils/api.js";
 
-const CreatePost = ({ onPostCreated = () => {} }) => {
+const CreatePost = ({ onPostCreated = () => { } }) => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const { primaryColor } = useTheme();
 
-  const {user, setUser} = useAuth();
+  const { user, setUser } = useAuth();
 
   useEffect(() => {
     if (user && user._id) {
@@ -39,33 +38,33 @@ const CreatePost = ({ onPostCreated = () => {} }) => {
       const fileType = file.type.startsWith("image")
         ? "image"
         : file.type.startsWith("video")
-        ? "video"
-        : null;
-  
+          ? "video"
+          : null;
+
       if (!fileType) {
         console.log("Unsupported file type selected.");
         return;
       }
-  
+
       setPostData({ ...postData, file, fileType }); // Store the file and its type
     } else {
       console.log("No file selected.");
     }
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!postData.description) {
       console.log("Description is required!");
       return;
     }
-  
+
     try {
       const formData = new FormData();
       formData.append("userId", postData.userId);
       formData.append("description", postData.description);
-  
+
       // Only append file and fileType if a file is selected
       if (postData.file) {
         formData.append("file", postData.file);
@@ -73,11 +72,11 @@ const CreatePost = ({ onPostCreated = () => {} }) => {
       } else {
         formData.append("fileType", "text"); // Default to "text" if no file is uploaded
       }
-  
+
       const res = await API.post("/posts/createPost", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
+
       onPostCreated(res.data);
       setPostData({ userId: postData.userId, description: "", file: "", fileType: "text" });
       fileInputRef.current.value = null; // Clear file input
@@ -101,19 +100,19 @@ const CreatePost = ({ onPostCreated = () => {} }) => {
         className="w-full p-2 bg-black border border-[var(--primary-color)] rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white mb-4"
       />
       <input
-  type="file"
-  accept="image/*,video/*"
-  onChange={handleFileChange}
-  ref={fileInputRef}
-  className="w-full p-2 bg-black border border-[var(--primary-color)] rounded text-white focus:outline-none focus:ring-2 focus:ring-white mb-4"
-/>
-{postData.file && (
-  <img
-    src={URL.createObjectURL(postData.file)}
-    alt="Preview"
-    className="w-full mb-4 rounded"
-  />
-)}
+        type="file"
+        accept="image/*,video/*"
+        onChange={handleFileChange}
+        ref={fileInputRef}
+        className="w-full p-2 bg-black border border-[var(--primary-color)] rounded text-white focus:outline-none focus:ring-2 focus:ring-white mb-4"
+      />
+      {postData.file && (
+        <img
+          src={URL.createObjectURL(postData.file)}
+          alt="Preview"
+          className="w-full mb-4 rounded"
+        />
+      )}
 
       <button
         onClick={handleSubmit}

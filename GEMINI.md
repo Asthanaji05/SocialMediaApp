@@ -9,7 +9,6 @@
 - **Auth**: JWT, Google OAuth
 
 ## Observations
-- **Frontend Dependencies**: `Frontend/package.json` contains standard backend packages (`express`, `mongoose`, `passport`, `ejs`). These are likely unnecessary in the frontend build and might be a remnant of a previous structure or a mistake.
-- **Backend Scripts**: `backend/package.json` lacks a `start` or `dev` script. It defaults to `test` which errors.
+- [x] Clean up Frontend dependencies (remove backend packages).
+- [x] Add `start` and `dev` scripts to backend `package.json`.
 - **Port config**: Backend runs on 3000 (default), allows CORS from 5173.
-

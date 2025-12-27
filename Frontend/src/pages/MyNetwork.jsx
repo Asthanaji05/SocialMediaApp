@@ -52,8 +52,8 @@ const MyNetwork = () => {
         });
         setTopPostsMap(postMap);
       } catch (err) {
-        console.error("Error fetching network data:", err);
-        setError("Failed to load network data.");
+        console.error("Error fetching Circles data:", err);
+        setError("Failed to load Circles data.");
       } finally {
         setLoading(false);
       }
@@ -64,7 +64,7 @@ const MyNetwork = () => {
 
   if (loading) return <Loading />;
   if (error) return <div className="min-h-screen flex items-center justify-center bg-black text-white px-6 py-10"><p className="text-red-500">{error}</p></div>;
-  if (!user) return <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white px-6 py-10"><p className="text-gray-400 mb-6 text-xl font-borel">Join the circle to see your network.</p><Link to="/login"><button className="px-8 py-3 rounded-full bg-[var(--primary-color)] text-black font-bold hover:scale-105 transition-transform">Login Now</button></Link></div>;
+  if (!user) return <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white px-6 py-10"><p className="text-gray-400 mb-6 text-xl font-borel">Join the circle to see your circles.</p><Link to="/login"><button className="px-8 py-3 rounded-full bg-[var(--primary-color)] text-black font-bold hover:scale-105 transition-transform">Login Now</button></Link></div>;
 
   return (
     <div className="min-h-screen bg-black text-white pt-24 pb-20 px-6">
@@ -72,7 +72,7 @@ const MyNetwork = () => {
 
         <div className="flex items-center gap-4 mb-10 border-b border-white/5 pb-6">
           <Users className="text-[var(--primary-color)] w-8 h-8" />
-          <h1 className="text-4xl font-nerko tracking-wide">My Circle</h1>
+          <h1 className="text-4xl font-nerko tracking-wide">My Circles</h1>
         </div>
 
         <div className="space-y-12">

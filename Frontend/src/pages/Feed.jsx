@@ -65,7 +65,7 @@ const Feed = () => {
               <NavLink icon={Compass} label="Explore" active />
               <NavLink icon={Flame} label="Popular" />
               <NavLink icon={Bookmark} label="Bookmarks" />
-              <NavLink icon={Users} label="My Circle" />
+              <NavLink icon={Users} label="My Circles" />
             </nav>
           </div>
         </div>

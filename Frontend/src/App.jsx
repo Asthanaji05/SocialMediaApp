@@ -23,31 +23,31 @@ import PostDetails from "./components/Feed/PostDetails";
 function App() {
   return (
     <ThemeProvider>
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}> 
-              <AuthProvider>
-        <Router>
-          <NavBar /> {/* Global NavBar */}
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/profile/:userId" element={<OtherUserProfile />} />
-            <Route path="/profile" element={<UserProfile />} />
-            <Route path="/edit-profile" element={<EditProfile />} />
-            <Route path="/google-signup" element={<GoogleSignup />} />
-            <Route path="/feed" element={<Feed />} />
-            <Route path="/feed/post" element={<Post />} />
-            <Route path="/feed/story" element={<Story />} />
-            <Route path="/share/:token" element={<PostDetails  />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/my-network" element={<MyNetwork />} />
-            <Route path="/my-network/:userId" element={<OtherUserProfile />} />
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <AuthProvider>
+          <Router>
+            <NavBar /> {/* Global NavBar */}
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/logout" element={<Logout />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/profile/:userId" element={<OtherUserProfile />} />
+              <Route path="/profile" element={<UserProfile />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
+              <Route path="/google-signup" element={<GoogleSignup />} />
+              <Route path="/feed" element={<Feed />} />
+              <Route path="/feed/post" element={<Post />} />
+              <Route path="/feed/story" element={<Story />} />
+              <Route path="/share/:token" element={<PostDetails />} />
+              <Route path="/chat" element={<ChatPage />} />
+              <Route path="/circles" element={<MyNetwork />} />
+              <Route path="/circles/:userId" element={<OtherUserProfile />} />
 
-          </Routes>
-          <Footer />
-        </Router>
-      </AuthProvider>
+            </Routes>
+            <Footer />
+          </Router>
+        </AuthProvider>
       </GoogleOAuthProvider>
 
     </ThemeProvider>

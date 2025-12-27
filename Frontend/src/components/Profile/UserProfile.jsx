@@ -185,7 +185,7 @@ const UserProfile = () => {
             onClick={() => setActiveTab("network")}
             className={`pb-3 text-lg font-nerko tracking-wide transition-all relative ${activeTab === "network" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
           >
-            Circle ({followingUsers.length})
+            My Circles ({followingUsers.length})
             {activeTab === "network" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--primary-color)] shadow-[0_0_10px_var(--primary-color)]"></span>}
           </button>
         </div>

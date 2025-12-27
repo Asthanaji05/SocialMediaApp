@@ -78,7 +78,7 @@ const NavBar = () => {
               <>
                 <Link to="/chat" className={linkClasses("/chat")}>Chat</Link>
                 <Link to="/profile" className={linkClasses("/profile")}>Profile</Link>
-                <Link to="/my-network" className={linkClasses("/my-network")}>Network</Link>
+                <Link to="/circles" className={linkClasses("/circles")}>Circles</Link>
               </>
             )}
           </div>
@@ -131,7 +131,7 @@ const NavBar = () => {
             <>
               <Link to="/chat" className="text-lg font-medium text-gray-300 hover:text-[var(--primary-color)]" onClick={() => setIsMobileMenuOpen(false)}>Chat</Link>
               <Link to="/profile" className="text-lg font-medium text-gray-300 hover:text-[var(--primary-color)]" onClick={() => setIsMobileMenuOpen(false)}>Profile</Link>
-              <Link to="/my-network" className="text-lg font-medium text-gray-300 hover:text-[var(--primary-color)]" onClick={() => setIsMobileMenuOpen(false)}>Network</Link>
+              <Link to="/circles" className="text-lg font-medium text-gray-300 hover:text-[var(--primary-color)]" onClick={() => setIsMobileMenuOpen(false)}>Circles</Link>
               <SearchBar />
               <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/10">
                 <span className="text-gray-400 text-sm">Theme</span>

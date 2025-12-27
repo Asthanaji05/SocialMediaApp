@@ -223,7 +223,7 @@ const Post = ({
             className={`flex items-center gap-2 transition-colors ${liked ? "text-pink-500" : "hover:text-pink-500"}`}
           >
             <Heart size={20} className={liked ? "fill-pink-500" : ""} />
-            <span className="text-sm font-medium">{likeCount || ""}</span>
+            <span className="text-sm font-medium">{likeCount || "0"}</span>
           </button>
 
           {/* Comment */}

@@ -1,6 +1,6 @@
 import React from "react";
 import { useTheme } from "../contexts/ThemeContext";
-import { Heart, Users, Sparkles, ShieldCheck, Zap } from "lucide-react";
+import { Heart, Users, Sparkles, ShieldCheck, Zap, MessageSquare, Radio, Orbit } from "lucide-react";
 
 const AboutMoscownpur = () => {
     const { primaryColor } = useTheme();
@@ -35,6 +35,24 @@ const AboutMoscownpur = () => {
             icon: Zap,
             description: "The creators you have chosen to orbit. By 'Trusting' someone, you integrate their signal into your personal Moscownpur experience.",
             color: "#f59e0b" // Amber-500
+        },
+        {
+            term: "Transmissions",
+            icon: MessageSquare,
+            description: "Direct, encrypted corridors of thought. A Transmission represents a continuous thread of conversation between two minds synchronized in the same orbit.",
+            color: "#06b6d4" // Cyan-500
+        },
+        {
+            term: "Oracles",
+            icon: Orbit,
+            description: "The trusted entities within your circle whose signal you value most. Engaging with an Oracle initiates a direct transmission channel.",
+            color: "#6366f1" // Indigo-500
+        },
+        {
+            term: "Signals",
+            icon: Radio,
+            description: "Individual pulses of communication. We don't just send messages; we emit signals to manifest intent and synchronize coordinates.",
+            color: "#14b8a6" // Teal-500
         }
     ];
 

@@ -17,6 +17,8 @@ const UserSchema = new mongoose.Schema({
   about: { type: String, trim: true },
   status: { type: String, enum: ['online', 'idle', 'offline'], default: 'offline' },
   lastSeen: { type: Date, default: Date.now },
+  moscownpurId: { type: String, index: true }, // For Supabase UUID link
+  isRealmLinked: { type: Boolean, default: false },
 }, { timestamps: true });
 
 

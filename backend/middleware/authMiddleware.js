@@ -15,10 +15,8 @@ export const verifyToken = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // Attach the user ID to the request object
-      req.user = { userId: decoded.userId };
-      // console.log("Incoming Token:", authHeader);
-      // console.log("JWT_SECRET:", process.env.JWT_SECRET);
-
+      req.user = { id: decoded.userId, userId: decoded.userId };
+      console.log(`🔑 Auth Verified: ${decoded.userId} calling ${req.method} ${req.url}`);
       next();
     } catch (error) {
       console.error("Token verification failed:", error.message);

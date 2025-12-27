@@ -17,9 +17,11 @@ import {
   searchUsers,
   googleLogin,
   googleSignup,
-  checkGoogleUser
+  checkGoogleUser,
+  syncMoscownpurProfile,
+  getMoscownpurStatus
 } from "../controllers/userController.js";
-import { fetchUserTopPosts as getUserTopPosts,   getSavedPosts } from "../controllers/postController.js"; // Import the getUserTopPosts function
+import { fetchUserTopPosts as getUserTopPosts, getSavedPosts } from "../controllers/postController.js"; // Import the getUserTopPosts function
 import { verifyToken } from "../middleware/authMiddleware.js"; // Import the verifyToken middleware
 // import { isAuthenticated } from '../middleware/authMiddleware.js'; // Import the isAuthenticated middleware
 const router = express.Router();
@@ -31,7 +33,7 @@ router.get("/search", verifyToken, searchUsers);
 // router.get('/:id/saved-posts', verifyToken, getSavedPosts);
 
 // saved posts
-router.get("/:userId/saved-posts/",  getSavedPosts);
+router.get("/:userId/saved-posts/", getSavedPosts);
 
 
 router.get("/", getUsers);
@@ -68,6 +70,10 @@ router.post('/google-signup', googleSignup);
 
 // Check if Google User Exists Route
 router.post('/check-google-user', checkGoogleUser);
+
+// Moscownpur (RealM) Cross-Platform Sync
+router.post('/profile/sync-realm', verifyToken, syncMoscownpurProfile);
+router.get('/profile/realm-status', verifyToken, getMoscownpurStatus);
 
 
 export default router;

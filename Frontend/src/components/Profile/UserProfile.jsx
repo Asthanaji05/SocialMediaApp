@@ -29,6 +29,7 @@ const UserProfile = () => {
   const [followingUsers, setFollowingUsers] = useState([]);
   const [topPosts, setTopPosts] = useState([]);
   const [savedPosts, setSavedPosts] = useState([]);
+  const [realmStatus, setRealmStatus] = useState({ linked: false, loading: true });
 
   // --- DATA FETCHING ---
   useEffect(() => {
@@ -71,6 +72,50 @@ const UserProfile = () => {
     };
     fetchUser();
   }, []);
+
+  // --- Moscownpur (RealM) Sync ---
+  useEffect(() => {
+    const checkRealmLink = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+        const res = await API.get("/users/profile/realm-status");
+        setRealmStatus({
+          linked: res.data.isRealmLinked,
+          moscownpurId: res.data.moscownpurId,
+          stats: res.data.stats,
+          loading: false
+        });
+      } catch (err) {
+        setRealmStatus({ linked: false, loading: false });
+      }
+    };
+    checkRealmLink();
+  }, []);
+
+  const handleSyncRealm = async () => {
+    setRealmStatus(prev => ({ ...prev, loading: true }));
+    try {
+      const res = await API.post("/users/profile/sync-realm");
+      if (res.data.linked) {
+        setRealmStatus({
+          linked: true,
+          moscownpurId: res.data.moscownpurId,
+          stats: res.data.stats,
+          loading: false
+        });
+        // Update user state to reflect link
+        setUser(prev => ({
+          ...prev,
+          isRealmLinked: true,
+          moscownpurId: res.data.moscownpurId
+        }));
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Sync failed. Make sure your Maitrilok email matches your Moscownpur narrative account.");
+      setRealmStatus(prev => ({ ...prev, loading: false }));
+    }
+  };
 
 
   const navigate = useNavigate();
@@ -162,6 +207,65 @@ const UserProfile = () => {
             "{user.about || "Just another creator traversing the Moscownpur universe."}"
           </p>
         </div>
+
+        {/* Moscownpur Link Card */}
+        {!realmStatus.loading && (
+          <div className="mb-8 p-6 rounded-3xl bg-[#0a0a0a] border border-orange-500/20 shadow-[0_0_30px_rgba(249,115,22,0.05)] overflow-hidden relative group transition-all duration-500 hover:border-orange-500/40">
+            {/* Background Narrative Glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 blur-[100px] -mr-32 -mt-32"></div>
+
+            <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div className="flex items-center gap-5">
+                <div className="relative">
+                  <div className={`absolute -inset-2 bg-orange-500/20 rounded-full blur-md transition-all duration-1000 ${realmStatus.linked ? 'opacity-100' : 'opacity-0'}`}></div>
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500/20 to-orange-900/40 border border-orange-500/30 flex items-center justify-center relative">
+                    <Radio className={`w-7 h-7 ${realmStatus.linked ? 'text-orange-500 animate-pulse' : 'text-gray-600'}`} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-bungee text-base tracking-widest text-orange-400">
+                      {realmStatus.linked ? "Moscownpur Narrative Link" : "Narrative Operating System"}
+                    </h3>
+                    {realmStatus.linked && (
+                      <span className="px-2 py-0.5 rounded-full bg-orange-500 text-[9px] font-bold text-black uppercase tracking-tighter">Verified</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-400 font-medium font-sans leading-tight">
+                    {realmStatus.linked
+                      ? `@${realmStatus.stats?.username || 'Citizen'} • Synced across the creative multiverse.`
+                      : "Connect your creative worlds and characters to your social orbit."}
+                  </p>
+                </div>
+              </div>
+
+              {!realmStatus.linked ? (
+                <Button
+                  onClick={handleSyncRealm}
+                  className="w-full md:w-auto bg-orange-500 hover:bg-orange-600 text-black font-extrabold rounded-xl px-8 py-6 shadow-[0_4px_15px_rgba(249,115,22,0.3)] transition-all hover:scale-105"
+                >
+                  Sync Narrative Identity
+                </Button>
+              ) : (
+                <div className="w-full md:w-auto grid grid-cols-3 gap-4 md:gap-8 bg-black/40 backdrop-blur-xl p-4 rounded-2xl border border-white/5">
+                  <div className="text-center">
+                    <span className="block text-xl font-nerko text-orange-200">{realmStatus.stats?.worlds || 0}</span>
+                    <span className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Worlds</span>
+                  </div>
+                  <div className="text-center">
+                    <span className="block text-xl font-nerko text-orange-200">{realmStatus.stats?.characters || 0}</span>
+                    <span className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Chars</span>
+                  </div>
+                  <div className="text-center">
+                    <span className="block text-xl font-nerko text-orange-500">{realmStatus.stats?.xp || 0}</span>
+                    <span className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">XP</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="flex gap-8 md:gap-16 border-y border-white/10 py-6">

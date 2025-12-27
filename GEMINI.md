@@ -36,4 +36,8 @@
     - [x] Redesigned SearchBar (Glassmorphism, Avatars, Glowing states).
     - [x] Fixed "Ghost/Blank Post" creation glitch (corrected `user.image` reference).
     - [x] Hardened backend against `CastError` for invalid Signal IDs.
+- [x] Moscownpur (RealM) Integration:
+    - [x] Bidirectional ID mapping between MongoDB and Supabase.
+    - [x] Real-time creative stats display (Worlds, Chars, XP) on profile.
+    - [x] Data Migration: Initialized Realm fields for existing users.
 - **Port config**: Backend runs on 3000 (default), allows CORS from 5173.

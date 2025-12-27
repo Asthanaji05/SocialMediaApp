@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import realmSupabase, { realmAdmin } from "../utils/supabaseClient.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"; // Import JWT
 import { OAuth2Client } from 'google-auth-library';
@@ -516,3 +517,138 @@ export const checkGoogleUser = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
+// Sync with Moscownpur (RealM)
+export const syncMoscownpurProfile = async (req, res) => {
+  const userId = req.user.userId || req.user.id;
+  console.log(`\n--- 🔄 SYNC REQUEST START ---`);
+  console.log(`👤 Maitrilok User ID: ${userId}`);
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      console.error(`❌ Sync Failed: User not found in MongoDB for ID: ${userId}`);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userEmail = user.email ? user.email.toLowerCase().trim() : "";
+    console.log(`📧 Syncing with Email: "${userEmail}"`);
+
+    // 1. Query Supabase profiles table by email
+    console.log(`📡 Querying Supabase RealM...`);
+    const { data: profile, error: supabaseError } = await realmSupabase
+      .from('profiles')
+      .select('id, email, username')
+      .ilike('email', userEmail)
+      .single();
+
+    if (supabaseError) {
+      console.error("❌ Supabase Profile Fetch Error:", supabaseError.message);
+      if (supabaseError.code === 'PGRST116') {
+        return res.status(404).json({
+          message: `No Moscownpur account found for ${userEmail}. Ensure your emails match exactly.`,
+          linked: false
+        });
+      }
+      return res.status(500).json({ message: "Supabase connection error", error: supabaseError.message });
+    }
+
+    console.log(`✅ Supabase Profile Found: @${profile.username} (${profile.id})`);
+
+    // 2. Map IDs in MongoDB (Atomic Update)
+    console.log("💾 Updating MongoDB bridge fields...");
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          moscownpurId: profile.id,
+          isRealmLinked: true
+        }
+      },
+      { new: true }
+    );
+
+    if (!updatedUser || !updatedUser.isRealmLinked) {
+      console.error("❌ MongoDB update failed to persist.");
+      throw new Error("Local database update failed to persist.");
+    }
+    console.log(`✅ MongoDB Update Confirmed for ${updatedUser.userName}`);
+
+    // 3. Attempt to back-map in Supabase (Moscownpur) using Admin Client
+    let supabaseSyncSuccess = true;
+    console.log("🔗 Back-linking Maitrilok ID to Supabase...");
+    const { error: updateError } = await realmAdmin
+      .from('profiles')
+      .update({ maitrilok_id: userId.toString() })
+      .eq('id', profile.id);
+
+    if (updateError) {
+      console.warn("⚠️ Supabase back-map failed (Permissions/RLS):", updateError.message);
+      supabaseSyncSuccess = false;
+    } else {
+      console.log(`✅ Supabase ID Mapping Success.`);
+    }
+
+    // 4. Always fetch initial stats so the UI works regardless of total sync success
+    console.log("📈 Fetching initial creative stats...");
+    const [worldsRes, charsRes, finalProfile] = await Promise.all([
+      realmSupabase.from('worlds').select('id', { count: 'exact', head: true }).eq('user_id', profile.id),
+      realmSupabase.from('characters').select('id', { count: 'exact', head: true }).eq('author_id', profile.id),
+      realmSupabase.from('profiles').select('xp_score, username').eq('id', profile.id).single()
+    ]);
+
+    console.log("✅ Stats compiled. Sending response.");
+    console.log(`--- 🔄 SYNC REQUEST COMPLETE ---\n`);
+
+    res.status(200).json({
+      message: supabaseSyncSuccess ? "Profiles synced successfully!" : "Linked locally, but Supabase update failed (Permissions).",
+      linked: true,
+      moscownpurId: profile.id,
+      stats: {
+        worlds: worldsRes.count || 0,
+        characters: charsRes.count || 0,
+        xp: finalProfile.data?.xp_score || 0,
+        username: finalProfile.data?.username || profile.username
+      },
+      supabaseLinked: supabaseSyncSuccess
+    });
+  } catch (error) {
+    console.error("💥 Critical Failure in Sync Controller:", error);
+    res.status(500).json({ message: "Sync failed", error: error.message });
+  }
+};
+
+export const getMoscownpurStatus = async (req, res) => {
+  const userId = req.user.userId;
+  try {
+    const user = await User.findById(userId).select("isRealmLinked moscownpurId");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (user.isRealmLinked && user.moscownpurId) {
+      // Fetch stats from Supabase
+      const [worldsRes, charsRes, profileRes] = await Promise.all([
+        realmSupabase.from('worlds').select('id', { count: 'exact', head: true }).eq('user_id', user.moscownpurId),
+        realmSupabase.from('characters').select('id', { count: 'exact', head: true }).eq('author_id', user.moscownpurId),
+        realmSupabase.from('profiles').select('xp_score, username').eq('id', user.moscownpurId).single()
+      ]);
+
+      return res.status(200).json({
+        isRealmLinked: user.isRealmLinked,
+        moscownpurId: user.moscownpurId,
+        stats: {
+          worlds: worldsRes.count || 0,
+          characters: charsRes.count || 0,
+          xp: profileRes.data?.xp_score || 0,
+          username: profileRes.data?.username
+        }
+      });
+    }
+
+    res.status(200).json({ isRealmLinked: false });
+  } catch (error) {
+    console.error("Status Fetch Error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+

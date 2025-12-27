@@ -49,6 +49,11 @@ io.on("connection", (socket) => {
     io.to(messageData.chatId).emit("newMessage", messageData);
   });
 
+  socket.on("readMessages", ({ chatId, userId }) => {
+    // Notify others in the room that messages were read
+    socket.to(chatId).emit("messagesRead", { chatId, userId });
+  });
+
   socket.on("disconnect", () => {
     // console.log("User disconnected");
   });

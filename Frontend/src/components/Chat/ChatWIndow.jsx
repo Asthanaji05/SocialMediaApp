@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import MessageInput from "./MessageInput";
-import { Circle, Info, Phone, Video } from "lucide-react";
+import { Circle, Info, Phone, Video, CheckCheck } from "lucide-react";
 
 const ChatWindow = ({ selectedChat, currentUserId, onSendMessage }) => {
   const scrollRef = useRef(null);
@@ -65,8 +65,8 @@ const ChatWindow = ({ selectedChat, currentUserId, onSendMessage }) => {
                 )}
                 <div
                   className={`max-w-[80%] md:max-w-[70%] p-4 text-sm relative group transition-all duration-300 ${isCurrentUser
-                      ? "bg-[var(--primary-color)] text-black font-medium rounded-2xl rounded-tr-none shadow-[4px_4px_20px_rgba(var(--primary-rgb),0.1)]"
-                      : "bg-white/5 border border-white/5 text-gray-200 rounded-2xl rounded-tl-none hover:border-white/10 hover:bg-white/[0.07]"
+                    ? "bg-[var(--primary-color)] text-black font-medium rounded-2xl rounded-tr-none shadow-[4px_4px_20px_rgba(var(--primary-rgb),0.1)]"
+                    : "bg-white/5 border border-white/5 text-gray-200 rounded-2xl rounded-tl-none hover:border-white/10 hover:bg-white/[0.07]"
                     }`}
                 >
                   <p className="leading-relaxed">
@@ -75,8 +75,8 @@ const ChatWindow = ({ selectedChat, currentUserId, onSendMessage }) => {
 
                   {/* Status Indicator for own messages */}
                   {isCurrentUser && (
-                    <div className="absolute -right-6 bottom-1 opacity-0 group-hover:opacity-40 transition-opacity">
-                      <Circle size={8} className="fill-[var(--primary-color)]" />
+                    <div className="absolute right-3 bottom-1 flex items-center gap-0.5 opacity-60">
+                      <CheckCheck size={12} className={msg.read ? "text-black" : "text-black/40"} />
                     </div>
                   )}
                 </div>

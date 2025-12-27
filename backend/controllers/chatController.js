@@ -66,3 +66,25 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Mark messages as read
+export const markMessagesAsRead = async (req, res) => {
+  const { chatId, userId } = req.body;
+
+  try {
+    const chat = await Chats.findById(chatId);
+    if (!chat) return res.status(404).json({ message: "Chat not found" });
+
+    // Update all messages sent by others to 'read: true'
+    chat.messages.forEach(msg => {
+      if (msg.sender.toString() !== userId) {
+        msg.read = true;
+      }
+    });
+
+    await chat.save();
+    res.status(200).json({ message: "Messages marked as read" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

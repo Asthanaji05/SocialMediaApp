@@ -50,6 +50,12 @@ const ChatList = ({ chats, following, userId, onCreateChat, onSelectChat, select
                 const isSelected = selectedChatId === chat._id;
                 const lastMessage = chat.messages?.[chat.messages.length - 1];
 
+                // Calculate unread signals sent by others
+                const unreadCount = chat.messages?.filter(m => {
+                  const senderId = typeof m.sender === 'object' ? m.sender._id : m.sender;
+                  return senderId !== userId && !m.read;
+                }).length || 0;
+
                 return (
                   <div
                     key={chat._id}
@@ -67,20 +73,26 @@ const ChatList = ({ chats, following, userId, onCreateChat, onSelectChat, select
                           {targetUser?.firstName?.[0]}
                         </div>
                       )}
-                      {isSelected && (
+                      {isSelected ? (
                         <div className="absolute -bottom-0 -right-0 w-3.5 h-3.5 bg-[var(--primary-color)] border-2 border-black rounded-full shadow-[0_0_10px_var(--primary-color)]"></div>
+                      ) : (
+                        unreadCount > 0 && (
+                          <div className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[var(--primary-color)] text-black text-[10px] font-bold rounded-full flex items-center justify-center px-1 shadow-[0_0_10px_var(--primary-color)]">
+                            {unreadCount}
+                          </div>
+                        )
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-baseline mb-0.5">
-                        <h4 className={`font-bold truncate ${isSelected ? "text-white" : "text-gray-300 group-hover:text-white"}`}>
+                        <h4 className={`font-bold truncate ${isSelected ? "text-white" : unreadCount > 0 ? "text-white" : "text-gray-300 group-hover:text-white"}`}>
                           {targetUser?.firstName} {targetUser?.lastName}
                         </h4>
-                        <span className="text-[10px] text-gray-500 shrink-0">
-                          {lastMessage ? new Date(lastMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
+                        <span className={`text-[10px] shrink-0 ${unreadCount > 0 ? "text-[var(--primary-color)] font-bold" : "text-gray-500"}`}>
+                          {lastMessage ? new Date(lastMessage.createdAt || lastMessage.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 truncate italic">
+                      <p className={`text-xs truncate italic ${unreadCount > 0 ? "text-gray-200 font-medium not-italic" : "text-gray-500"}`}>
                         {lastMessage ? lastMessage.content : "Tap to open signal..."}
                       </p>
                     </div>

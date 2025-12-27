@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import API from "../utils/api";
 import { useAuth } from "../contexts/AuthContext";
 import ChatList from "../components/Chat/ChatList";
@@ -7,7 +7,6 @@ import Loading from "../components/UI/Loading";
 import { MessageSquareOff } from "lucide-react";
 import { io } from "socket.io-client";
 
-// Initialize socket - connect to backend port 3000
 const socket = io("http://localhost:3000", { withCredentials: true });
 
 const ChatPage = () => {
@@ -17,20 +16,52 @@ const ChatPage = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Request Notification Permission on mount
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  const markAsRead = useCallback(async (chatId) => {
+    if (!user || !chatId) return;
+    try {
+      const token = localStorage.getItem("token");
+      await API.post("/chats/read", { chatId, userId: user._id }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Notify other participants via socket
+      socket.emit("readMessages", { chatId, userId: user._id });
+
+      // Locally update state to clear unread locally
+      setChats(prev => prev.map(c => {
+        if (c._id === chatId) {
+          return {
+            ...c,
+            messages: c.messages.map(m => ({ ...m, read: m.sender._id !== user._id ? true : m.read }))
+          };
+        }
+        return c;
+      }));
+    } catch (err) {
+      console.error("Error marking messages as read:", err);
+    }
+  }, [user]);
+
   // --- Socket Listeners ---
   useEffect(() => {
     if (!user) return;
 
-    // Listen for incoming signals (messages)
     socket.on("newMessage", (messageData) => {
-      // console.log("Incoming signal detected:", messageData);
-
       // 1. Update the chat window if the transmission belongs to the active corridor
       setSelectedChat((prev) => {
         if (prev && prev._id === messageData.chatId) {
-          // Check for existing message to avoid duplicates from echo
           const messageExists = prev.messages.some(m => m._id === messageData._id);
           if (messageExists) return prev;
+
+          // If the chat is open, immediately mark as read
+          markAsRead(messageData.chatId);
 
           return {
             ...prev,
@@ -40,7 +71,7 @@ const ChatPage = () => {
         return prev;
       });
 
-      // 2. Update the sidebar preview list so the latest signal shows up
+      // 2. Update the sidebar preview list
       setChats((prevChats) =>
         prevChats.map((chat) =>
           chat._id === messageData.chatId
@@ -48,19 +79,57 @@ const ChatPage = () => {
             : chat
         )
       );
+
+      // 3. Browser Notification if not active or not in that chat
+      const isOtherSender = (typeof messageData.sender === 'string' ? messageData.sender : messageData.sender._id) !== user._id;
+      if (isOtherSender && (!selectedChat || selectedChat._id !== messageData.chatId)) {
+        if (Notification.permission === "granted") {
+          new Notification("New Transmission", {
+            body: `${messageData.sender.userName || 'Oracle'}: ${messageData.content}`,
+            icon: "/favicon.ico" // You might want to use the sender's image here if possible
+          });
+        }
+      }
+    });
+
+    socket.on("messagesRead", ({ chatId, userId: readingUserId }) => {
+      // If others read our messages, update the read ticks
+      if (readingUserId !== user._id) {
+        setSelectedChat(prev => {
+          if (prev && prev._id === chatId) {
+            return {
+              ...prev,
+              messages: prev.messages.map(m => ({ ...m, read: true }))
+            };
+          }
+          return prev;
+        });
+
+        setChats(prev => prev.map(c => {
+          if (c._id === chatId) {
+            return {
+              ...c,
+              messages: c.messages.map(m => ({ ...m, read: true }))
+            };
+          }
+          return c;
+        }));
+      }
     });
 
     return () => {
       socket.off("newMessage");
+      socket.off("messagesRead");
     };
-  }, [user]);
+  }, [user, selectedChat, markAsRead]);
 
-  // Synchronize with the room whenever the selected chat changes
+  // Sync with the room and mark as read when selecting
   useEffect(() => {
     if (selectedChat?._id) {
       socket.emit("joinChat", selectedChat._id);
+      markAsRead(selectedChat._id);
     }
-  }, [selectedChat?._id]);
+  }, [selectedChat?._id, markAsRead]);
 
   useEffect(() => {
     if (!user || !user._id) return;
@@ -109,14 +178,12 @@ const ChatPage = () => {
     if (!selectedChat) return;
 
     try {
-      // First, save the signal to the database via REST
       const response = await API.post("/chats/send", {
         chatId: selectedChat._id,
         sender: user._id,
         content: message,
       });
 
-      // Then, broadcast the transmission to the corridor via Socket.io
       socket.emit("sendMessage", {
         ...response.data,
         chatId: selectedChat._id

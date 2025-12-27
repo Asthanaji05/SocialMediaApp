@@ -66,7 +66,7 @@ const NavBar = () => {
               <MoscownpurLogo className={`w-full h-full text-[var(--primary-color)] transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-180`} />
             </div>
             <span className={`font-bungee tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--primary-color)] to-white transition-all duration-500 ${scrolled ? "text-xl" : "text-2xl"}`}>
-              Moscownpur
+              Moscownpur Circles
             </span>
           </Link>
 

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button.jsx";
 import { Badge } from "@/components/ui/badge.jsx";
 import { Separator } from "@/components/ui/separator.jsx";
 import { Users, MessageCircle, Shield, Brain, ZapOff, Sparkles, Lock } from "lucide-react";
-import MoscownpurLogo from "../components/ui/MoscownpurLogo";
+import MoscownpurLogo from "../components/ui/MoscownpurLogo.jsx";
 
 const Home = () => {
   const { primaryColor } = useTheme();

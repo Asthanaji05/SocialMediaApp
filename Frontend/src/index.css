@@ -49,6 +49,7 @@
   --font-nerko: "Nerko One", cursive;
   --font-borel: "Borel", cursive;
   --font-corinthia: "Corinthia", cursive;
+  --font-bungee: "Bungee", sans-serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

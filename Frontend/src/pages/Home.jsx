@@ -5,173 +5,150 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Flame, Heart, Globe, MessageCircle, Shield } from "lucide-react";
+import { Users, MessageCircle, Fingerprint, ZapOff } from "lucide-react";
 
 const Home = () => {
   const { primaryColor } = useTheme();
 
   useEffect(() => {
-    document.title = "Welcome Home | Moscownpur Circles";
+    document.title = "The Human Layer | Moscownpur Circles";
   }, []);
 
-  // Helper to apply dynamic primary color styles
-  const primaryStyle = { color: 'var(--primary-color)' };
   const bgPrimaryStyle = { backgroundColor: 'var(--primary-color)' };
-  const borderPrimaryStyle = { borderColor: 'var(--primary-color)' };
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-[var(--primary-color)] selection:text-black">
+    <div className="min-h-screen bg-black text-white selection:bg-[var(--primary-color)] selection:text-black font-sans">
 
       {/* Hero Section */}
-      <section className="relative flex flex-col items-center justify-center py-20 px-6 text-center overflow-hidden">
-        {/* Ambient Glow */}
+      <section className="relative flex flex-col items-center justify-center py-24 px-6 text-center overflow-hidden">
+        {/* Glow */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] opacity-20 blur-[100px] rounded-full pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-15 blur-[120px] rounded-full pointer-events-none"
           style={bgPrimaryStyle}
         ></div>
 
-        <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-          <Badge variant="outline" className="px-4 py-1 text-sm border-white/20 text-gray-300 backdrop-blur-sm">
-            <span className="mr-2">✨</span> Welcome to the Future of Connection
+        <div className="relative z-10 max-w-4xl mx-auto space-y-8">
+          <Badge variant="outline" className="px-4 py-1 text-sm border-white/20 text-gray-400 uppercase tracking-widest backdrop-blur-sm">
+            Intent
           </Badge>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
-            A World of <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--primary-color)] to-white animate-pulse">
-              True Connections
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-tight">
+            Moscownpur<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--primary-color)] to-white">
+              Circles
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Moscownpur Circles is a soulful social universe rooted in <span className="font-semibold text-[var(--primary-color)]">Community</span>.
-            Connect without noise, share without fear, and bond without limits.
+          <p className="text-xl md:text-2xl text-gray-300 font-light tracking-wide">
+            The human layer of Moscownpur.
+          </p>
+        </div>
+      </section>
+
+      <Separator className="my-0 bg-white/5 max-w-xl mx-auto" />
+
+      {/* The Manifesto - English */}
+      <section className="py-24 px-6 relative">
+        <div className="max-w-3xl mx-auto text-center space-y-12">
+
+          <p className="text-2xl md:text-3xl text-white/90 leading-relaxed font-serif italic">
+            "Where users don't just consume,<br />
+            <span style={{ color: 'var(--primary-color)' }}>they belong.</span>"
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-            <Link to="/login">
-              <Button
-                size="lg"
-                className="rounded-full px-8 text-black font-bold text-md transition-transform hover:scale-105"
-                style={bgPrimaryStyle}
-              >
-                Get Started
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button
-                variant="outline"
-                size="lg"
-                className="rounded-full px-8 border-white/20 text-white bg-black hover:bg-transparent transition-colors duration-300"
-                style={{
-                  '--hover-color': 'var(--primary-color)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--primary-color)';
-                  e.currentTarget.style.color = 'var(--primary-color)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                  e.currentTarget.style.color = 'white';
-                }}
-              >
-                Create Account
-              </Button>
-            </Link>
+          <div className="grid gap-8 md:grid-cols-3 text-left">
+            <div className="space-y-2 p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--primary-color)] transition-colors duration-500 group">
+              <MessageCircle className="w-8 h-8 text-gray-500 group-hover:text-[var(--primary-color)] mb-4 transition-colors" />
+              <h3 className="text-lg font-bold text-white">Conversations</h3>
+              <p className="text-gray-400 text-sm">Not loud, <br /><span className="text-white">but meaningful.</span></p>
+            </div>
+
+            <div className="space-y-2 p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--primary-color)] transition-colors duration-500 group">
+              <Users className="w-8 h-8 text-gray-500 group-hover:text-[var(--primary-color)] mb-4 transition-colors" />
+              <h3 className="text-lg font-bold text-white">Connections</h3>
+              <p className="text-gray-400 text-sm">Not temporary, <br /><span className="text-white">but trusted.</span></p>
+            </div>
+
+            <div className="space-y-2 p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--primary-color)] transition-colors duration-500 group">
+              <Fingerprint className="w-8 h-8 text-gray-500 group-hover:text-[var(--primary-color)] mb-4 transition-colors" />
+              <h3 className="text-lg font-bold text-white">Identity</h3>
+              <p className="text-gray-400 text-sm">Not performed, <br /><span className="text-white">but lived.</span></p>
+            </div>
           </div>
+
         </div>
       </section>
 
-      <Separator className="my-8 bg-white/10 max-w-6xl mx-auto" />
-
-      {/* Mission Section */}
-      <section className="py-16 px-6 relative">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-
-          <div className="space-y-6 order-2 md:order-1">
-            <h2 className="text-3xl font-bold flex items-center gap-3">
-              <Heart className="w-8 h-8" style={primaryStyle} />
-              Our Mission
+      {/* Philosophy Section */}
+      <section className="py-20 px-6 bg-white/5">
+        <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+          <div className="space-y-6">
+            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+              Small, Intentional<br />
+              <span style={{ color: 'var(--primary-color)' }}>Communities</span>
             </h2>
             <p className="text-gray-400 text-lg leading-relaxed">
-              In a digital age of fleeting interactions, <strong className="text-white">Moscownpur Circles</strong> stands for permanence.
-              Our mission is to bring back the essence of real connections—building a sanctuary where trust, expression,
-              and cultural harmony thrive.
+              Circles are friends, thinkers, builders, and learners who create a safe, honest space within the broader world of Moscownpur.
             </p>
-            <div className="flex gap-4">
-              <div className="flex flex-col items-center p-4 bg-white/5 rounded-xl border border-white/5 w-1/3">
-                <span className="text-2xl font-bold text-white">100%</span>
-                <span className="text-xs text-gray-500 uppercase tracking-wider">Real Users</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-white/5 rounded-xl border border-white/5 w-1/3">
-                <span className="text-2xl font-bold text-white">0%</span>
-                <span className="text-xs text-gray-500 uppercase tracking-wider">Ads</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-white/5 rounded-xl border border-white/5 w-1/3">
-                <span className="text-2xl font-bold text-white">∞</span>
-                <span className="text-xs text-gray-500 uppercase tracking-wider">Love</span>
-              </div>
-            </div>
+            <ul className="space-y-4 pt-4">
+              <li className="flex items-center gap-3 text-gray-300">
+                <ZapOff className="w-5 h-5 text-red-400" /> No algorithms pushing noise.
+              </li>
+              <li className="flex items-center gap-3 text-gray-300">
+                <ZapOff className="w-5 h-5 text-red-400" /> No vanity metrics deciding worth.
+              </li>
+              <li className="flex items-center gap-3 text-white font-medium">
+                <span style={{ color: 'var(--primary-color)' }}>✓</span> Just people, conversations, and real presence.
+              </li>
+            </ul>
           </div>
 
-          <div className="order-1 md:order-2 grid grid-cols-2 gap-4">
-            <div className="space-y-4 translate-y-8">
-              <div className="h-40 w-full rounded-2xl bg-gradient-to-b from-[var(--primary-color)]/20 to-transparent border border-white/10" />
-              <div className="h-40 w-full rounded-2xl bg-white/5 border border-white/10" />
+          <div className="relative h-64 md:h-96 w-full rounded-2xl overflow-hidden border border-white/10 bg-black/50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--primary-color)]/20 via-transparent to-transparent opacity-50" />
+            <div className="text-center p-8">
+              <p className="text-xl md:text-2xl font-serif italic text-white/80">
+                "Moscownpur Circles exists to ensure that <br />as Moscownpur grows bigger, <br />
+                <span className="text-white font-normal not-italic mt-2 block">its connections grow deeper.</span>"
+              </p>
             </div>
-            <div className="space-y-4">
-              <div className="h-40 w-full rounded-2xl bg-white/5 border border-white/10" />
-              <div className="h-40 w-full rounded-2xl bg-gradient-to-t from-[var(--primary-color)]/20 to-transparent border border-white/10" />
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Why MaitriLok Grid */}
-      <section className="py-20 px-6 bg-white/5">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Moscownpur Circles?</h2>
-            <p className="text-gray-400">Designed for those who crave authenticity.</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { icon: Shield, title: "Safe & Soulful", desc: "A troll-free environment where your peace of mind comes first." },
-              { icon: Globe, title: "Bharatiya Values", desc: "Deeply rooted in the cultural ethos of respect and harmony." },
-              { icon: MessageCircle, title: "Real Conversations", desc: "No algorithms manipulating your feed. Just real talk." },
-              { icon: Flame, title: "Neon Vibes", desc: "Fully customizable themes to match your unique aura." }
-            ].map((feature, idx) => (
-              <Card key={idx} className="bg-black/50 border-white/10 hover:border-[var(--primary-color)] transition-colors duration-300 group">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-4 group-hover:bg-[var(--primary-color)]/20 transition-colors">
-                    <feature.icon className="w-6 h-6 text-gray-300 group-hover:text-[var(--primary-color)] transition-colors" />
-                  </div>
-                  <CardTitle className="text-xl text-white">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-400 text-sm leading-relaxed">
-                    {feature.desc}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
           </div>
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="py-24 px-6 text-center">
-        <h2 className="text-4xl font-bold mb-6">Ready to Join the Tribe?</h2>
-        <Link to="/signup">
-          <Button
-            size="lg"
-            className="rounded-full px-12 py-6 text-lg font-bold text-black hover:opacity-90 transition-opacity"
-            style={bgPrimaryStyle}
-          >
-            Start Your Journey Now
-          </Button>
-        </Link>
+      <section className="py-32 px-6 text-center">
+        <h2 className="text-5xl md:text-6xl font-black mb-8 tracking-tight">Belong Here.</h2>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link to="/login">
+            <Button
+              size="lg"
+              className="rounded-full px-10 py-7 text-lg text-black font-bold transition-transform hover:scale-105"
+              style={bgPrimaryStyle}
+            >
+              Enter Needs
+            </Button>
+          </Link>
+          <Link to="/signup">
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full px-10 py-7 text-lg border-white/20 text-white bg-black hover:bg-transparent transition-colors duration-300"
+              style={{
+                '--hover-color': 'var(--primary-color)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary-color)';
+                e.currentTarget.style.color = 'var(--primary-color)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.color = 'white';
+              }}
+            >
+              Join a Circle
+            </Button>
+          </Link>
+        </div>
       </section>
 
     </div>

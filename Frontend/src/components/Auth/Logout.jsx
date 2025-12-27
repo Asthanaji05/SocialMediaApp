@@ -5,12 +5,6 @@ const Logout = () => {
   const { logout } = useAuth();
   const handleLogout = async () => {
     try {
-      // Call the backend logout endpoint
-      // await fetch("http://localhost:3000/auth/logout", {
-      //   method: "GET",
-      //   credentials: "include", // Include credentials for session-based logout
-      // });
-
       // Remove the token from local storage
       localStorage.removeItem("token");
       // Clear user state in context

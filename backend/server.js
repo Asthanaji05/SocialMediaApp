@@ -24,6 +24,7 @@ const server = http.createServer(app);
 // Initialize Socket.io
 const allowedOrigins = [
   "http://localhost:5173",
+  "https://circles.moscownpur.in",
   process.env.FRONTEND_URL || "https://moscownpur-circles.onrender.com"
 ];
 

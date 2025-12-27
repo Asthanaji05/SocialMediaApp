@@ -25,7 +25,7 @@ services:
       - key: PORT
         value: 10000
       - key: FRONTEND_URL
-        value: https://moscownpur-circles.onrender.com
+        value: https://circles.moscownpur.in
       - key: VITE_API_URL
         value: https://moscownpur-circles.onrender.com
       - key: VITE_GOOGLE_CLIENT_ID

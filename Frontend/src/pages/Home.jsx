@@ -32,14 +32,14 @@ const Home = () => {
         {/* --- HERO SECTION --- */}
         <section className="relative flex flex-col items-center justify-center py-24 px-6 text-center">
           <div className="max-w-5xl mx-auto space-y-8">
-            <h1 className="text-6xl md:text-9xl tracking-wide leading-none font-nerko grid gap-4">
+            <h1 className="text-6xl md:text-9xl tracking-wide leading-none font-bungee grid gap-4">
               Moscownpur
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--primary-color)] to-white">
                 Circles
               </span>
             </h1>
 
-            <p className="text-3xl md:text-5xl text-white font-borel mt-8">
+            <p className="text-3xl md:text-5xl text-white font-bungee mt-8">
               Where Creators Truly Connect
             </p>
 
@@ -55,7 +55,7 @@ const Home = () => {
         {/* --- INTRO SECTION --- */}
         <section className="py-24 px-6">
           <div className="max-w-3xl mx-auto text-center space-y-8">
-            <p className="text-2xl md:text-3xl font-borel leading-relaxed text-gray-200">
+            <p className="text-2xl md:text-3xl font-bungee leading-relaxed text-gray-200">
               "Inside Circles, writers, worldbuilders, and designers come together in small, trusted communities to discuss ideas, exchange feedback, and grow their universes collaboratively."
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-gray-400 font-nerko text-xl tracking-wide">
@@ -73,8 +73,8 @@ const Home = () => {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 space-y-4">
               <Badge variant="outline" className="px-4 py-1 border-[var(--primary-color)] text-[var(--primary-color)] uppercase tracking-widest">Concept</Badge>
-              <h2 className="text-5xl md:text-6xl font-nerko text-white">What Are Circles?</h2>
-              <p className="text-gray-400 text-xl font-borel">
+              <h2 className="text-5xl md:text-6xl font-bungee text-white">What Are Circles?</h2>
+              <p className="text-gray-400 text-xl font-bungee">
                 Intentional micro-communities within MosCownpur.
                 <Link to="/lexicon" className="ml-2 text-[var(--primary-color)] hover:underline">Explore the Lexicon</Link>
               </p>
@@ -85,7 +85,7 @@ const Home = () => {
                 <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:bg-[var(--primary-color)]/20 transition-colors">
                   <Brain className="w-6 h-6 text-white group-hover:text-[var(--primary-color)]" />
                 </div>
-                <h3 className="text-2xl font-nerko mb-4">Focus</h3>
+                <h3 className="text-2xl font-bungee mb-4">Focus</h3>
                 <p className="text-gray-400 leading-relaxed">Each Circle is built around shared interests — a universe, a genre, a project, or a creative goal.</p>
               </div>
 
@@ -93,7 +93,7 @@ const Home = () => {
                 <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:bg-[var(--primary-color)]/20 transition-colors">
                   <Lock className="w-6 h-6 text-white group-hover:text-[var(--primary-color)]" />
                 </div>
-                <h3 className="text-2xl font-nerko mb-4">Privacy</h3>
+                <h3 className="text-2xl font-bungee mb-4">Privacy</h3>
                 <p className="text-gray-400 leading-relaxed">Private by default. A sanctuary where your conversations remain clear, meaningful, and safe.</p>
               </div>
 
@@ -101,7 +101,7 @@ const Home = () => {
                 <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:bg-[var(--primary-color)]/20 transition-colors">
                   <MessageCircle className="w-6 h-6 text-white group-hover:text-[var(--primary-color)]" />
                 </div>
-                <h3 className="text-2xl font-nerko mb-4">Depth</h3>
+                <h3 className="text-2xl font-bungee mb-4">Depth</h3>
                 <p className="text-gray-400 leading-relaxed">Built for long-form, thoughtful discussion. As your universe grows, your connections deepen.</p>
               </div>
             </div>
@@ -111,7 +111,7 @@ const Home = () => {
         {/* --- WHY MOSCOWNPUR CIRCLES --- */}
         <section className="py-24 px-6">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-5xl md:text-6xl font-nerko mb-16 text-center">Why Moscownpur Circles?</h2>
+            <h2 className="text-5xl md:text-6xl font-bungee mb-16 text-center">Why Moscownpur Circles?</h2>
 
             <div className="space-y-12">
               {/* Feature 1 */}
@@ -120,7 +120,7 @@ const Home = () => {
                   <h3 className="text-3xl font-nerko text-[var(--primary-color)]">Designed for Creators</h3>
                 </div>
                 <div className="md:w-2/3">
-                  <p className="text-xl text-gray-300 font-borel mb-2">Circles are not social media.</p>
+                  <p className="text-xl text-gray-300 font-bungee mb-2">Circles are not social media.</p>
                   <p className="text-gray-400 leading-relaxed">They are collaborative spaces where ideas are respected and explored deeply.</p>
                 </div>
               </div>
@@ -132,7 +132,7 @@ const Home = () => {
                   <h3 className="text-3xl font-nerko text-[var(--primary-color)]">Signal Over Noise</h3>
                 </div>
                 <div className="md:w-2/3">
-                  <p className="text-xl text-gray-300 font-borel mb-2">No engagement bait. No algorithms.</p>
+                  <p className="text-xl text-gray-300 font-bungee mb-2">No engagement bait. No algorithms.</p>
                   <p className="text-gray-400 leading-relaxed">Your Circle decides the pace and direction. Focus on what truly matters.</p>
                 </div>
               </div>
@@ -144,7 +144,7 @@ const Home = () => {
                   <h3 className="text-3xl font-nerko text-[var(--primary-color)]">Trust & Privacy First</h3>
                 </div>
                 <div className="md:w-2/3">
-                  <p className="text-xl text-gray-300 font-borel mb-2">Small groups foster honesty.</p>
+                  <p className="text-xl text-gray-300 font-bungee mb-2">Small groups foster honesty.</p>
                   <p className="text-gray-400 leading-relaxed">Share early drafts, raw ideas, and half-formed thoughts without fear of judgment.</p>
                 </div>
               </div>
@@ -156,7 +156,7 @@ const Home = () => {
                   <h3 className="text-3xl font-nerko text-[var(--primary-color)]">Seamless Integration</h3>
                 </div>
                 <div className="md:w-2/3">
-                  <p className="text-xl text-gray-300 font-borel mb-2">Connected to your Universe.</p>
+                  <p className="text-xl text-gray-300 font-bungee mb-2">Connected to your Universe.</p>
                   <p className="text-gray-400 leading-relaxed">Discuss characters, timelines, and worlds while staying connected to the systems you already use in MosCownpur.</p>
                 </div>
               </div>
@@ -172,7 +172,7 @@ const Home = () => {
             {/* Narrative OS Side */}
             <div className="space-y-8 p-8 rounded-3xl bg-black/20 border border-white/5">
               <h3 className="text-4xl font-nerko">The Narrative OS</h3>
-              <p className="text-2xl font-borel text-gray-300 leading-relaxed">
+              <p className="text-2xl font-bungee text-gray-300 leading-relaxed">
                 "MosCownpur is your <span className="text-[var(--primary-color)]">Narrative Engine</span>.<br /> Circles are where its creators meet."
               </p>
               <p className="text-gray-400">If MosCownpur helps you build worlds, Circles help you build together.</p>
@@ -208,7 +208,7 @@ const Home = () => {
         <section className="py-32 px-6 text-center">
           <h2 className="text-6xl md:text-8xl mb-4 font-nerko">Join Circles</h2>
 
-          <p className="text-2xl md:text-3xl text-gray-400 font-borel mb-12">
+          <p className="text-2xl md:text-3xl text-gray-400 font-bungee mb-12">
             Find your people. Build better worlds — together.
           </p>
 

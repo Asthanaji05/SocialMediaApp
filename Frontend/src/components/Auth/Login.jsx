@@ -227,17 +227,15 @@ const Login = () => {
             </form>
           )}
 
-          {/* Google OAuth - Legacy (Only show if Supabase not configured) */}
-          {!isSupabaseConfigured && (
+{/* Google OAuth - Legacy (Only show if Supabase not configured) */}
+          {/* {!isSupabaseConfigured && (
             <>
-              {/* Divider */}
               <div className="my-8 flex items-center gap-4">
                 <div className="flex-1 h-[1px] bg-white/5"></div>
                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600">Cross-Platform</span>
                 <div className="flex-1 h-[1px] bg-white/5"></div>
               </div>
 
-              {/* Google Auth */}
               <div className="flex flex-col items-center gap-6">
                 <div className="w-full flex justify-center transform transition-transform hover:scale-[1.01]">
                   <GoogleLogin
@@ -250,7 +248,7 @@ const Login = () => {
                 </div>
               </div>
             </>
-          )}
+          )} */}
 
           <p className="text-sm text-gray-500 mt-8 text-center">
             New to the orbit?{" "}

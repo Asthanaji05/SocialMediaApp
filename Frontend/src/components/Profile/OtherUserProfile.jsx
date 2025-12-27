@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { MapPin, Users, Heart, Calendar } from "lucide-react";
+import { MapPin, Users, Heart, Calendar, BarChart3, Radio } from "lucide-react";
 import Loading from "../UI/Loading";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/ThemeContext";
@@ -97,6 +97,8 @@ const OtherUserProfile = () => {
                   {otherUser.firstName?.[0]}
                 </div>
               )}
+              {/* Presence Indicator */}
+              <div className={`absolute bottom-2 right-2 w-5 h-5 rounded-full border-4 border-black ${otherUser.status === 'online' ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 'bg-gray-500'}`} title={otherUser.status || 'offline'}></div>
             </div>
 
             {/* Text Info */}
@@ -108,7 +110,7 @@ const OtherUserProfile = () => {
               <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                 <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {otherUser.address || "Nowhere"}</span>
                 <span>•</span>
-                <span>Joined {new Date().getFullYear()}</span>
+                <span className="flex items-center gap-1 italic"><Radio className="w-3 h-3 text-[var(--primary-color)]" /> {otherUser.status === 'online' ? 'Active Signal' : `Last seen ${new Date(otherUser.lastSeen).toLocaleDateString()}`}</span>
               </div>
             </div>
 
@@ -190,9 +192,14 @@ const OtherPostCard = ({ post }) => (
       {post.description || "Untitled Thought"}
     </p>
     <div className="flex justify-between items-center text-xs text-gray-500 border-t border-white/5 pt-4">
-      <span className="flex items-center gap-2 group-hover:text-[var(--primary-color)] transition-colors">
-        <Heart className="w-4 h-4" /> {post.likes?.length || 0} Appreciations
-      </span>
+      <div className="flex gap-4">
+        <span className="flex items-center gap-1.5 group-hover:text-[var(--primary-color)] transition-colors">
+          <Heart className="w-4 h-4" /> {post.likes?.length || 0}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <BarChart3 className="w-4 h-4" /> {post.reach || 0} Reach
+        </span>
+      </div>
       <span className="flex items-center gap-2">
         <Calendar className="w-4 h-4" /> {new Date(post.createdAt).toLocaleDateString()}
       </span>

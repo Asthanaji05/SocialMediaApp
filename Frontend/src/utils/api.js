@@ -5,6 +5,18 @@ const API = axios.create({
   withCredentials: true,  // Ensure cookies/sessions work properly
 });
 
-
+// Response Interceptor to handle Token Expiry
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Token mismatch or expiry detected
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default API;

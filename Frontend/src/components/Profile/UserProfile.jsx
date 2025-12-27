@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { Settings, MapPin, Trash2, Grid, Bookmark, Users, Heart, Calendar, BarChart3, Radio } from "lucide-react";
 import Loading from "../UI/Loading";
 import { useAuth } from "../../contexts/AuthContext";
@@ -10,8 +10,22 @@ import { Button } from "@/components/ui/button";
 const UserProfile = () => {
   const { user, setUser, logout } = useAuth();
   const { primaryColor } = useTheme();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("posts");
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "posts");
+
+  // Sync tab with URL search params
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab && tab !== activeTab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setSearchParams({ tab });
+  };
   const [followingUsers, setFollowingUsers] = useState([]);
   const [topPosts, setTopPosts] = useState([]);
   const [savedPosts, setSavedPosts] = useState([]);
@@ -170,21 +184,21 @@ const UserProfile = () => {
       <div className="max-w-4xl mx-auto px-6">
         <div className="flex gap-8 mb-8 border-b border-white/10">
           <button
-            onClick={() => setActiveTab("posts")}
+            onClick={() => handleTabChange("posts")}
             className={`pb-3 text-lg font-bungee tracking-wide transition-all relative ${activeTab === "posts" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
           >
             Top Creations
             {activeTab === "posts" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--primary-color)] shadow-[0_0_10px_var(--primary-color)]"></span>}
           </button>
           <button
-            onClick={() => setActiveTab("saved")}
+            onClick={() => handleTabChange("saved")}
             className={`pb-3 text-lg font-nerko tracking-wide transition-all relative ${activeTab === "saved" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
           >
             Saved
             {activeTab === "saved" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--primary-color)] shadow-[0_0_10px_var(--primary-color)]"></span>}
           </button>
           <button
-            onClick={() => setActiveTab("network")}
+            onClick={() => handleTabChange("network")}
             className={`pb-3 text-lg font-nerko tracking-wide transition-all relative ${activeTab === "network" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
           >
             My Circles ({followingUsers.length})

@@ -67,7 +67,7 @@ const Feed = () => {
             <nav className="space-y-2">
               <NavLink icon={Compass} label="Explore" to="/feed" active />
               <NavLink icon={Flame} label="Popular" to="/feed" />
-              <NavLink icon={Bookmark} label="Bookmarks" to="/feed" />
+              <NavLink icon={Bookmark} label="Bookmarks" to="/profile?tab=saved" />
               <NavLink icon={Users} label="My Circles" to="/circles" />
               <div className="pt-4 mt-4 border-t border-white/5">
                 <NavLink icon={BookOpen} label="Lexicon" to="/lexicon" />

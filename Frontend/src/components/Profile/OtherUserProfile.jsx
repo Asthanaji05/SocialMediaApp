@@ -103,7 +103,7 @@ const OtherUserProfile = () => {
 
             {/* Text Info */}
             <div className="flex-1 mb-2">
-              <h1 className="text-4xl md:text-5xl font-nerko text-white leading-none">
+              <h1 className="text-4xl md:text-5xl font-bungee text-white leading-none">
                 {otherUser.firstName} {otherUser.lastName}
               </h1>
               <p className="text-gray-400 font-borel text-lg">@{otherUser.userName || "creator"}</p>
@@ -159,7 +159,7 @@ const OtherUserProfile = () => {
         <div className="flex gap-8 mb-8 border-b border-white/10">
           <button
             onClick={() => setActiveTab("posts")}
-            className={`pb-3 text-lg font-nerko tracking-wide transition-all relative ${activeTab === "posts" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
+            className={`pb-3 text-lg font-bungee tracking-wide transition-all relative ${activeTab === "posts" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
           >
             Top Creations
             {activeTab === "posts" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--primary-color)] shadow-[0_0_10px_var(--primary-color)]"></span>}

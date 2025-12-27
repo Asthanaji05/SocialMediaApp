@@ -231,7 +231,7 @@ const ChatPage = () => {
                   <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6">
                     <MessageSquareOff size={40} className="text-gray-700" />
                   </div>
-                  <h3 className="text-2xl font-nerko text-gray-400 mb-2">No Active Orbit</h3>
+                  <h3 className="text-2xl font-bungee text-gray-400 mb-2">No Active Orbit</h3>
                   <p className="font-borel max-w-xs">Select a trusted creator from the side to begin a private transmission.</p>
                 </div>
               )}

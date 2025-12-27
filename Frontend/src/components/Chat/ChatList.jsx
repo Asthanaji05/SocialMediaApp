@@ -23,7 +23,7 @@ const ChatList = ({ chats, following, userId, onCreateChat, onSelectChat, select
 
       {/* Header & Search */}
       <div className="px-6 mb-6">
-        <h2 className="text-3xl font-nerko tracking-wide mb-6 flex items-center gap-2">
+        <h2 className="text-3xl font-bungee tracking-wide mb-6 flex items-center gap-2">
           Transmissions
         </h2>
         <div className="relative">
@@ -61,8 +61,8 @@ const ChatList = ({ chats, following, userId, onCreateChat, onSelectChat, select
                     key={chat._id}
                     onClick={() => onSelectChat(chat)}
                     className={`group flex items-center gap-4 p-3 rounded-2xl cursor-pointer transition-all duration-300 ${isSelected
-                        ? "bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.05)]"
-                        : "hover:bg-white/5 border border-transparent"
+                      ? "bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.05)]"
+                      : "hover:bg-white/5 border border-transparent"
                       }`}
                   >
                     <div className="relative shrink-0">

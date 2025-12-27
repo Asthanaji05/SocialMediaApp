@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import ThemeSwitcher from "../../pages/ThemeSwitcher";
+import ThemeSwitcher from "../../pages/ThemeSwitcher.jsx";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
-import Logout from "../Auth/Logout";
-import SearchBar from "../Search/SearchBar";
+import Logout from "../Auth/Logout.jsx";
+import SearchBar from "../Search/SearchBar.jsx";
 import MoscownpurLogo from "../ui/MoscownpurLogo.jsx";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";

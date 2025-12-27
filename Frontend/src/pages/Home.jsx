@@ -74,7 +74,10 @@ const Home = () => {
             <div className="text-center mb-16 space-y-4">
               <Badge variant="outline" className="px-4 py-1 border-[var(--primary-color)] text-[var(--primary-color)] uppercase tracking-widest">Concept</Badge>
               <h2 className="text-5xl md:text-6xl font-nerko text-white">What Are Circles?</h2>
-              <p className="text-gray-400 text-xl font-borel">Intentional micro-communities within MosCownpur.</p>
+              <p className="text-gray-400 text-xl font-borel">
+                Intentional micro-communities within MosCownpur.
+                <Link to="/lexicon" className="ml-2 text-[var(--primary-color)] hover:underline">Explore the Lexicon</Link>
+              </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">

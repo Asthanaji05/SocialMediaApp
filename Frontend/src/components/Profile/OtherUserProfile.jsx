@@ -185,7 +185,7 @@ const OtherUserProfile = () => {
 };
 
 const OtherPostCard = ({ post }) => (
-  <div className="bg-[#0a0a0a] border border-white/10 rounded-xl p-6 hover:border-[var(--primary-color)]/50 transition-all group hover:bg-white/[0.02]">
+  <div className="bg-[#0f0f0f] border border-white/10 rounded-xl p-6 hover:border-[var(--primary-color)]/30 hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)] transition-all duration-300 group">
     <p className="font-medium text-gray-200 line-clamp-3 mb-6 font-sans leading-relaxed text-lg">
       {post.description || "Untitled Thought"}
     </p>

@@ -19,6 +19,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import GoogleSignup from "./components/Auth/GoogleSignUp.jsx";
 import PostDetails from "./components/Feed/PostDetails";
+import AboutMoscownpur from "./pages/AboutMoscownpur";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
               <Route path="/chat" element={<ChatPage />} />
               <Route path="/circles" element={<MyNetwork />} />
               <Route path="/circles/:userId" element={<OtherUserProfile />} />
+              <Route path="/lexicon" element={<AboutMoscownpur />} />
 
             </Routes>
             <Footer />

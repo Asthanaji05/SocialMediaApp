@@ -133,7 +133,7 @@ const Post = ({
 
 
   return (
-    <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl overflow-hidden hover:border-white/10 transition-colors duration-300">
+    <div className="bg-[#0f0f0f] border border-white/10 rounded-2xl overflow-hidden hover:border-[var(--primary-color)]/30 hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)] transition-all duration-300">
 
       {/* --- Header --- */}
       <div className="p-4 flex justify-between items-start">
@@ -217,12 +217,12 @@ const Post = ({
       <div className="p-4 pt-3 flex justify-between items-center text-gray-500">
         <div className="flex gap-6">
 
-          {/* Like */}
+          {/* Like / Appreciation */}
           <button
             onClick={handleLikeToggle}
-            className={`flex items-center gap-2 transition-colors ${liked ? "text-pink-500" : "hover:text-pink-500"}`}
+            className={`flex items-center gap-2 transition-colors ${liked ? "text-[var(--primary-color)]" : "hover:text-[var(--primary-color)]"}`}
           >
-            <Heart size={20} className={liked ? "fill-pink-500" : ""} />
+            <Heart size={20} className={liked ? "fill-[var(--primary-color)]" : ""} />
             <span className="text-sm font-medium">{likeCount || "0"}</span>
           </button>
 

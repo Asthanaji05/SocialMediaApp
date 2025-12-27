@@ -13,7 +13,7 @@ const Logout = () => {
 
       // Remove the token from local storage
       localStorage.removeItem("token");
-       // Clear user state in context
+      // Clear user state in context
       logout();
 
       // Clear user data from local storage
@@ -28,12 +28,12 @@ const Logout = () => {
   };
 
   return (
-<span
-  onClick={handleLogout}
-  className="cursor-pointer hover:text-[var(--primary-color)] transition"
->
-  Logout
-</span>
+    <span
+      onClick={handleLogout}
+      className="text-gray-400 font-medium cursor-pointer hover:text-[var(--primary-color)] transition-colors duration-200"
+    >
+      Logout
+    </span>
 
 
   );

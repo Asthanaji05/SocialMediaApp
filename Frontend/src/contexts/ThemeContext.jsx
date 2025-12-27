@@ -38,11 +38,17 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     const mappedColor = colorMap[primaryColor] || colorMap[defaultColor];
-    // console.log("Setting primary color:", primaryColor, mappedColor); // Debugging log
-    document.documentElement.style.setProperty("--primary-color", mappedColor); // Set CSS variable
-    localStorage.setItem("primaryColor", primaryColor || defaultColor); // Save to localStorage
+    document.documentElement.style.setProperty("--primary-color", mappedColor);
+
+    // Convert hex to RGB for alpha transparency support
+    const r = parseInt(mappedColor.slice(1, 3), 16);
+    const g = parseInt(mappedColor.slice(3, 5), 16);
+    const b = parseInt(mappedColor.slice(5, 7), 16);
+    document.documentElement.style.setProperty("--primary-rgb", `${r}, ${g}, ${b}`);
+
+    localStorage.setItem("primaryColor", primaryColor || defaultColor);
   }, [primaryColor]);
-  
+
 
   return (
     <ThemeContext.Provider value={{ primaryColor, setPrimaryColor }}>

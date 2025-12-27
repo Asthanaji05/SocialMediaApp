@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import API from "../utils/api";
 import Loading from "../components/UI/Loading";
 import { Link } from "react-router-dom";
-import { Flame, Compass, Bookmark, TrendingUp, Users } from "lucide-react";
+import { Flame, Compass, Bookmark, TrendingUp, Users, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Feed = () => {
@@ -62,10 +62,13 @@ const Feed = () => {
 
             {/* Nav Links */}
             <nav className="space-y-2">
-              <NavLink icon={Compass} label="Explore" active />
-              <NavLink icon={Flame} label="Popular" />
-              <NavLink icon={Bookmark} label="Bookmarks" />
-              <NavLink icon={Users} label="My Circles" />
+              <NavLink icon={Compass} label="Explore" to="/feed" active />
+              <NavLink icon={Flame} label="Popular" to="/feed" />
+              <NavLink icon={Bookmark} label="Bookmarks" to="/feed" />
+              <NavLink icon={Users} label="My Circles" to="/circles" />
+              <div className="pt-4 mt-4 border-t border-white/5">
+                <NavLink icon={BookOpen} label="Lexicon" to="/lexicon" />
+              </div>
             </nav>
           </div>
         </div>
@@ -118,11 +121,11 @@ const Feed = () => {
 };
 
 // Sub-components for Sidebar
-const NavLink = ({ icon: Icon, label, active }) => (
-  <button className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${active ? "bg-[var(--primary-color)]/10 text-[var(--primary-color)] font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"}`}>
+const NavLink = ({ icon: Icon, label, active, to = "#" }) => (
+  <Link to={to} className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${active ? "bg-[var(--primary-color)]/10 text-[var(--primary-color)] font-bold" : "text-gray-400 hover:bg-white/5 hover:text-white"}`}>
     <Icon size={20} />
     <span>{label}</span>
-  </button>
+  </Link>
 );
 
 const TrendingItem = ({ topic, count }) => (

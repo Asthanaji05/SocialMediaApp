@@ -52,4 +52,8 @@
     - [x] Collapsible legacy login (email/password) for backward compatibility.
     - [x] Environment variable alignment (`VITE_REALM_SUPABASE_URL`, `VITE_REALM_SUPABASE_ANON_KEY`).
     - [x] Configuration validation with `isSupabaseConfigured` flag.
-- **Port config**: Backend runs on 3000 (default), allows CORS from 5173.
+- [x] Production Build & Deployment:
+    - [x] Resolved Case-Sensitivity issue: Renamed `components/UI` to `components/ui` for Linux/Render compatibility.
+    - [x] Fixed Static Asset Serving: Updated `backend/server.js` with ES Modules compliant `__dirname` logic.
+    - [x] Verified build pipeline: Frontend assets successfully migrate to `backend/public` for unified serving.
+- **Port config**: Backend runs on 3000 (default), allows CORS from 5173. Render uses PORT 10000.

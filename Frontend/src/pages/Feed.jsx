@@ -7,11 +7,38 @@ import Loading from "../components/UI/Loading";
 import { Link } from "react-router-dom";
 import { Flame, Compass, Bookmark, TrendingUp, Users, BookOpen, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import socket from "../utils/socket";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
   const { user, setUser } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [trending, setTrending] = useState([]);
+
+  // --- Real-time Listeners ---
+  useEffect(() => {
+    socket.on("newPost", (newPost) => {
+      // Add the new post to the top of the feed if it's not already there
+      setPosts((prev) => {
+        if (prev.find(p => p._id === newPost._id)) return prev;
+        return [newPost, ...prev];
+      });
+    });
+
+    socket.on("updatePost", (updatedPost) => {
+      setPosts((prev) => prev.map(p => p._id === updatedPost._id ? { ...p, ...updatedPost } : p));
+    });
+
+    socket.on("trendingUpdate", (newTrending) => {
+      setTrending(newTrending);
+    });
+
+    return () => {
+      socket.off("newPost");
+      socket.off("updatePost");
+      socket.off("trendingUpdate");
+    };
+  }, []);
 
   // --- Data Fetching ---
   useEffect(() => {
@@ -25,8 +52,13 @@ const Feed = () => {
         }
 
         // Fetching Content
-        const postsRes = await API.get("/posts/fetchAllPosts");
+        const [postsRes, trendingRes] = await Promise.all([
+          API.get("/posts/fetchAllPosts"),
+          API.get("/posts/trending")
+        ]);
+
         setPosts(postsRes.data);
+        setTrending(trendingRes.data);
 
       } catch (err) { console.error(err); }
       finally { setLoading(false); }
@@ -106,10 +138,16 @@ const Feed = () => {
             </div>
 
             <div className="space-y-6">
-              <TrendingItem topic="Worldbuilding" count="2.4k posts" />
-              <TrendingItem topic="#MoscownpurCircles" count="1.8k posts" />
-              <TrendingItem topic="AI Storytelling" count="900 posts" />
-              <TrendingItem topic="Character Design" count="850 posts" />
+              {trending.map((item) => (
+                <TrendingItem
+                  key={item._id}
+                  topic={`#${item._id}`}
+                  count={`${item.count} posts`}
+                />
+              ))}
+              {trending.length === 0 && (
+                <p className="text-sm text-gray-500 italic">Exploring for new signals...</p>
+              )}
             </div>
 
             <div className="mt-8 pt-6 border-t border-white/5 text-xs text-gray-600">
@@ -132,9 +170,15 @@ const NavLink = ({ icon: Icon, label, active, to = "#" }) => (
 );
 
 const TrendingItem = ({ topic, count }) => (
-  <div className="group cursor-pointer">
-    <p className="font-bold text-gray-200 group-hover:text-[var(--primary-color)] transition-colors">{topic}</p>
-    <p className="text-xs text-gray-500">{count}</p>
+  <div className="group cursor-pointer flex items-center justify-between hover:bg-white/[0.02] p-2 -mx-2 rounded-xl transition-all duration-300">
+    <div className="flex-1 min-w-0">
+      <p className="font-bold text-gray-200 group-hover:text-[var(--primary-color)] transition-colors truncate">{topic}</p>
+      <p className="text-xs text-gray-500">{count}</p>
+    </div>
+    <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 text-[var(--primary-color)]">
+      <Flame size={14} className="animate-pulse" />
+      <span className="text-[10px] font-bold uppercase tracking-tighter">Sparking</span>
+    </div>
   </div>
 );
 

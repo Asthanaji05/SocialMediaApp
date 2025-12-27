@@ -43,9 +43,12 @@ const Post = ({
 
   // -- Effects --
   useEffect(() => {
-    // Check if liked by current user
+    // Sync with external updates (e.g. from sockets)
+    setLikeCount(likes?.length || 0);
     if (likes && likes.includes(currentUserId)) {
       setLiked(true);
+    } else {
+      setLiked(false);
     }
   }, [likes, currentUserId]);
 
@@ -67,9 +70,11 @@ const Post = ({
       (entries) => {
         if (entries[0].isIntersecting) {
           // Increment reach on server
-          API.put(`/posts/reach/${_id}`).then(res => {
-            setReach(res.data.reach);
-          }).catch(err => console.error("Reach error:", err));
+          if (_id) {
+            API.put(`/posts/reach/${_id}`).then(res => {
+              setReach(res.data.reach);
+            }).catch(err => console.error("Reach error:", err));
+          }
 
           // Once tracked, stop observing this post
           observer.unobserve(postRef.current);

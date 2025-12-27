@@ -15,6 +15,7 @@ import {
   getPostIdFromShareToken,
   fetchPost,
   incrementReach,
+  getTrending,
 } from "../controllers/postController.js";
 import { upload } from "../middleware/uploadMiddleware.js"; // Import multer middleware for file uploads
 import { verifyToken } from "../middleware/authMiddleware.js";
@@ -46,6 +47,7 @@ router.get("/share/:token", getPostIdFromShareToken);
 
 router.get("/fetchPostById/:postId", fetchPost); // Fetch post by ID
 router.put("/reach/:postId", verifyToken, incrementReach); // Increment post reach
+router.get("/trending", getTrending); // Fetch trending topics
 
 
 

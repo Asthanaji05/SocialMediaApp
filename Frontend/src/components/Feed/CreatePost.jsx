@@ -56,7 +56,7 @@ const CreatePost = ({ onPostCreated = () => { } }) => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      onPostCreated(res.data);
+      onPostCreated(res.data.post);
       // Reset
       setDescription("");
       setFile(null);

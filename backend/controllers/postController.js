@@ -56,13 +56,18 @@ export const createPost = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
+    // Extract hashtags from description automatically
+    const hashtags = description.match(/#[\w\u0590-\u05ff]+/g);
+    const tags = hashtags ? [...new Set(hashtags.map(tag => tag.slice(1).toLowerCase()))] : [];
+
     const newPost = new Post({
       userId,
       userName: user.userName,
-      userPic: user.profilePic,
+      userPic: user.image,
       fileType,
       file,
       description,
+      tags,
       likes: [],
       comments: [],
     });
@@ -78,6 +83,15 @@ export const createPost = async (req, res) => {
     // Save shareToken to post
     newPost.shareToken = shareToken;
     await newPost.save();
+
+    // 📡 Real-time Broadcast
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("newPost", newPost);
+      // Update trending for everyone
+      broadcastTrending(req.app);
+    }
+
     res
       .status(201)
       .json({ message: "Post created successfully", post: newPost });
@@ -99,7 +113,7 @@ export const createStory = async (req, res) => {
     const newStory = new Story({
       userId,
       username: user.userName,
-      userPic: user.profilePic,
+      userPic: user.image,
       fileType,
       file,
       text,
@@ -126,6 +140,12 @@ export const likePost = async (req, res) => {
       await post.save();
     }
 
+    // 📡 Real-time Broadcast
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("updatePost", post);
+    }
+
     res.status(200).json({ message: "Post liked", likes: post.likes });
   } catch (error) {
     console.error("Like error:", error);
@@ -142,6 +162,12 @@ export const unlikePost = async (req, res) => {
 
     post.likes = post.likes.filter((id) => id && id.toString() !== userId);
     await post.save();
+
+    // 📡 Real-time Broadcast
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("updatePost", post);
+    }
 
     res.status(200).json({ message: "Post unliked", likes: post.likes });
   } catch (error) {
@@ -215,7 +241,22 @@ export const editPost = async (req, res) => {
     }
 
     post.description = description || post.description;
+
+    // Re-extract tags if description changed
+    if (description) {
+      const hashtags = description.match(/#[\w\u0590-\u05ff]+/g);
+      post.tags = hashtags ? [...new Set(hashtags.map(tag => tag.slice(1).toLowerCase()))] : [];
+    }
+
     await post.save();
+
+    // 📡 Real-time Broadcast for updates
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("updatePost", post);
+      // Update trending for everyone
+      broadcastTrending(req.app);
+    }
 
     res.status(200).json({ message: "Post updated", post });
   } catch (error) {
@@ -366,6 +407,11 @@ export const incrementReach = async (req, res) => {
   const { postId } = req.params;
   const userId = req.user.id; // From verifyToken middleware
 
+  // 🛡️ Firewall: Prevent cast errors for invalid/undefined IDs
+  if (!postId || postId === "undefined" || postId.length !== 24) {
+    return res.status(400).json({ message: "Invalid Pulse ID" });
+  }
+
   try {
     // Attempt to update only if userId is NOT in the viewers array
     const post = await Post.findOneAndUpdate(
@@ -388,5 +434,44 @@ export const incrementReach = async (req, res) => {
   } catch (error) {
     console.error("Reach update error:", error);
     res.status(500).json({ message: "Error updating reach" });
+  }
+};
+
+// 🔥 Helper for Trending calculation
+const calculateTrending = async () => {
+  return await Post.aggregate([
+    { $unwind: "$tags" },
+    {
+      $group: {
+        _id: "$tags",
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { count: -1 } },
+    { $limit: 10 },
+  ]);
+};
+
+// 🔥 Broadcast Trending update
+const broadcastTrending = async (app) => {
+  try {
+    const io = app.get("io");
+    if (io) {
+      const trending = await calculateTrending();
+      io.emit("trendingUpdate", trending);
+    }
+  } catch (err) {
+    console.error("Trending broadcast error:", err);
+  }
+};
+
+// 🔥 Get Trending topics
+export const getTrending = async (req, res) => {
+  try {
+    const trending = await calculateTrending();
+    res.status(200).json(trending);
+  } catch (error) {
+    console.error("Trending error:", error);
+    res.status(500).json({ message: "Error fetching trending topics" });
   }
 };

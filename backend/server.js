@@ -27,6 +27,8 @@ const io = new Server(server, {
   }
 });
 
+app.set("io", io);
+
 app.use(express.json());
 
 // CORS Middleware to allow cookies in frontend

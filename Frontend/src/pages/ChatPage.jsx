@@ -5,9 +5,7 @@ import ChatList from "../components/Chat/ChatList";
 import ChatWindow from "../components/Chat/ChatWIndow";
 import Loading from "../components/UI/Loading";
 import { MessageSquareOff } from "lucide-react";
-import { io } from "socket.io-client";
-
-const socket = io("http://localhost:3000", { withCredentials: true });
+import socket from "../utils/socket";
 
 const ChatPage = () => {
   const { user } = useAuth();

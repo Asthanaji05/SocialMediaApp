@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import API from "../../utils/api";
 import { GoogleLogin } from "@react-oauth/google";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.jsx";
 import { supabase, isSupabaseConfigured } from "../../utils/supabase";
 
 const Login = () => {

@@ -5,7 +5,7 @@ import Loading from "../UI/Loading";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/ThemeContext";
 import API from "../../utils/api";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.jsx";
 
 const UserProfile = () => {
   const { user, setUser, logout } = useAuth();

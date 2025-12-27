@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Mail, Lock, User, ArrowRight, Sparkles, ChevronLeft, ShieldCheck } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../../utils/api.js";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.jsx";
 
 const SignUp = () => {
   const navigate = useNavigate();

@@ -6,7 +6,7 @@ import API from "../utils/api";
 import Loading from "../components/UI/Loading";
 import { Link } from "react-router-dom";
 import { Flame, Compass, Bookmark, TrendingUp, Users, BookOpen, Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.jsx";
 import socket from "../utils/socket";
 
 const Feed = () => {

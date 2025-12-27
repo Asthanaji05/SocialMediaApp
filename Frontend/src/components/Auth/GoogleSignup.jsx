@@ -3,7 +3,7 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import API from "../../utils/api";
 import { User, Sparkles, Mail, Lock, ChevronLeft, ArrowRight, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.jsx";
 
 const GoogleSignup = () => {
   const location = useLocation();

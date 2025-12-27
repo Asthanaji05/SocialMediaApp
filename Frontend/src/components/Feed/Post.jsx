@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import API from "../../utils/api.js";
 import { useAuth } from "../../contexts/AuthContext";
 import { Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, Trash2, PenLine, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.jsx";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu.jsx";
 
 const Post = ({
   _id,

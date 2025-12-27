@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { Mail, Lock, ArrowRight, Sparkles, ChevronLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import API from "../../utils/api";
 import { GoogleLogin } from "@react-oauth/google";
+import { Button } from "@/components/ui/button";
 
 function parseJwt(token) {
   try {
@@ -25,13 +26,14 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
-  // 1) Email/password login
   const handleEmailLogin = async (e) => {
     e.preventDefault();
-    setError(""); // Clear any previous errors
+    setError("");
+    setLoading(true);
     try {
       const response = await fetch(`${API.defaults.baseURL}/users/login`, {
         method: "POST",
@@ -39,27 +41,22 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Login failed");
+      if (!response.ok) throw new Error(data.message || "Invalid authentication frequency.");
 
       localStorage.setItem("token", data.token);
       setUser({ ...data.user, token: data.token });
-      navigate("/profile");
+      navigate("/feed");
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // 2) Google login via GoogleLogin component (preferred)
   const handleGoogleLogin = async (credentialResponse) => {
-    setError(""); // Clear any previous errors
+    setError("");
     try {
       const idToken = credentialResponse.credential;
-      const decoded = parseJwt(idToken);
-      if (!decoded) throw new Error("Invalid token");
-
-      const email = decoded.email;
-      const googleId = decoded.sub;
-
       const res = await fetch(`${API.defaults.baseURL}/users/google-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -67,112 +64,143 @@ const Login = () => {
       });
 
       const data = await res.json();
-      // console.log("Google login response:", data);
 
       if (res.status !== 200) {
         if (res.status === 302 && data.redirect === "/auth/google/signup") {
-          // Redirect to custom signup page with prefilled info if the user doesn't exist
           return navigate("/google-signup", {
             state: { email: data.email, googleId: data.googleId },
           });
         }
-        throw new Error(data.message || "Google login failed");
+        throw new Error(data.message || "Neural link failed.");
       }
 
-      // If user exists and Google login was successful, store the token and user info
       localStorage.setItem("token", data.token);
-      // console.log("Setting user and navigating...");
       setUser({ ...data.user, token: data.token });
-      navigate("/profile");
-      // console.log("Navigation called");
-
-      // Redirect to the profile page
-      navigate("/profile");
+      navigate("/feed");
     } catch (err) {
       setError(err.message);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        {/* Header */}
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
+    <div className="min-h-screen relative flex items-center justify-center bg-[#050505] overflow-hidden px-4 font-sans">
+      {/* --- NARRATIVE BACKGROUND --- */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full"></div>
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+      </div>
+
+      <div className="w-full max-w-lg relative z-10">
+        {/* Back navigation */}
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors mb-8 group"
+        >
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          <span className="text-sm font-bold uppercase tracking-widest font-bungee">Central Hub</span>
+        </Link>
+
+        {/* --- MAIN GLASS CARD --- */}
+        <div className="bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/5 rounded-[40px] p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
+          {/* Subtle inner glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+
+          <div className="relative text-center mb-10">
+            <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/60 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/20 rotate-3">
+              <Sparkles className="text-black w-8 h-8" />
+            </div>
+            <h1 className="text-4xl font-black text-white mb-2 tracking-tight font-bungee uppercase">
+              Restore Link
+            </h1>
+            <p className="text-gray-400 font-medium">
+              Initialize your creative frequency at <span className="text-primary/80">Moscownpur Circles</span>
+            </p>
+          </div>
+
+          <form onSubmit={handleEmailLogin} className="space-y-5">
+            <div className="space-y-4">
+              <div className="group relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-500 group-focus-within:text-primary transition-colors" />
+                </div>
+                <input
+                  type="email"
+                  required
+                  placeholder="Registry Email"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all text-sm font-medium"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="group relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-500 group-focus-within:text-primary transition-colors" />
+                </div>
+                <input
+                  type="password"
+                  required
+                  placeholder="Cipher Key"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all text-sm font-medium"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary hover:opacity-90 text-black font-black text-base py-7 rounded-2xl shadow-[0_10px_30px_rgba(var(--primary-rgb),0.2)] transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed group uppercase tracking-widest font-bungee"
             >
-              Sign up
-            </Link>
-          </p>
-        </div>
+              {loading ? "Decrypting..." : "Activate Frequency"}
+              {!loading && <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />}
+            </Button>
+          </form>
 
-        {/* Email/Password Form */}
-        <form className="mt-8 space-y-6" onSubmit={handleEmailLogin}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div className="relative">
-              <Mail className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
-              <input
-                type="email"
-                required
-                className="appearance-none rounded-none block w-full px-12 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+          {/* Divider */}
+          <div className="my-8 flex items-center gap-4">
+            <div className="flex-1 h-[1px] bg-white/5"></div>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600">Cross-Platform</span>
+            <div className="flex-1 h-[1px] bg-white/5"></div>
+          </div>
+
+          {/* Google Auth */}
+          <div className="flex flex-col items-center gap-6">
+            <div className="w-full flex justify-center transform transition-transform hover:scale-[1.01]">
+              <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={() => setError("Frequency misaligned. Try again.")}
+                theme="dark"
+                shape="pill"
+                width="100%"
               />
             </div>
-            <div className="relative mt-2">
-              <Lock className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
-              <input
-                type="password"
-                required
-                className="appearance-none rounded-none block w-full px-12 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+
+            <p className="text-sm text-gray-500">
+              New to the orbit?{" "}
+              <Link to="/signup" className="text-primary hover:underline decoration-primary/30 underline-offset-4 font-bold">
+                Initialize Account
+              </Link>
+            </p>
+          </div>
+
+          {error && (
+            <div className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold text-center animate-shake">
+              {error}
             </div>
-          </div>
-          <button
-            type="submit"
-            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-          >
-            <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-              <ArrowRight className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" />
-            </span>
-            Sign In
-          </button>
-        </form>
-
-        {/* Divider */}
-        <div className="mt-6 relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-gray-50 text-gray-500">or</span>
-          </div>
+          )}
         </div>
 
-        {/* Google Login Component */}
-        <div className="flex justify-center">
-          <GoogleLogin
-            onSuccess={handleGoogleLogin}
-            onError={() => setError("Google login failed")}
-          />
-        </div>
-
-        {error && (
-          <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
-        )}
+        {/* Footer info */}
+        <p className="mt-8 text-center text-[10px] text-gray-600 uppercase tracking-widest font-bold">
+          Encrypted Social Layer • Narrative Operating System v1.4
+        </p>
       </div>
     </div>
   );
 };
 
 export default Login;
+

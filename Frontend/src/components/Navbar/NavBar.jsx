@@ -87,7 +87,9 @@ const NavBar = () => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-4">
-                <div className={`transition-all duration-500 ${scrolled ? "w-8 overflow-hidden hover:w-64" : "w-48 lg:w-64"} max-w-[200px] lg:max-w-xs`}><SearchBar /></div>
+                <div className={`transition-all duration-500 ${scrolled ? "w-48 lg:w-64" : "w-48 lg:w-64"} max-w-[200px] lg:max-w-xs`}>
+                  <SearchBar />
+                </div>
                 <ThemeSwitcher />
                 <Logout />
               </div>

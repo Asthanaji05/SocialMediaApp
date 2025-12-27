@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { User, Mail, Phone, MapPin, AlignLeft, Save, ArrowLeft, Camera, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button.jsx";
 import API from "../../utils/api.js";
-import Loading from "../UI/Loading";
+import Loading from "../ui/Loading.jsx";
 
 const Settings = () => {
   const navigate = useNavigate();

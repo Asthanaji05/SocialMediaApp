@@ -3,7 +3,7 @@ import Post from "../components/Feed/Post";
 import CreatePost from "../components/Feed/CreatePost";
 import { useAuth } from "../contexts/AuthContext";
 import API from "../utils/api";
-import Loading from "../components/UI/Loading";
+import Loading from "../components/ui/Loading";
 import { Link } from "react-router-dom";
 import { Flame, Compass, Bookmark, TrendingUp, Users, BookOpen, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button.jsx";

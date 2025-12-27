@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { Link } from "react-router-dom";
-import Loading from "../components/UI/Loading";
+import Loading from "../components/ui/Loading";
 import API from "../utils/api";
 import { Users, Heart, Calendar, ArrowRight } from "lucide-react";
 

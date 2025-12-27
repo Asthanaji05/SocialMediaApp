@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { MapPin, Users, Heart, Calendar, BarChart3, Radio } from "lucide-react";
-import Loading from "../UI/Loading";
+import Loading from "../ui/Loading";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/ThemeContext";
 import API from "../../utils/api";

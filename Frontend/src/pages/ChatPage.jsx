@@ -3,7 +3,7 @@ import API from "../utils/api";
 import { useAuth } from "../contexts/AuthContext";
 import ChatList from "../components/Chat/ChatList";
 import ChatWindow from "../components/Chat/ChatWIndow";
-import Loading from "../components/UI/Loading";
+import Loading from "../components/ui/Loading";
 import { MessageSquareOff } from "lucide-react";
 import socket from "../utils/socket";
 

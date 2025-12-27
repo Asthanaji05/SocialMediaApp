@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
-import Loading from "../../components/UI/Loading";
+import Loading from "../ui/Loading";
 import API from "../../utils/api.js";
 import { Image, Video, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button.jsx";

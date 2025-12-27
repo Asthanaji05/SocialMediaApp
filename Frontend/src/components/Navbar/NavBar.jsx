@@ -4,7 +4,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
 import Logout from "../Auth/Logout";
 import SearchBar from "../Search/SearchBar";
-import MoscownpurLogo from "../UI/MoscownpurLogo";
+import MoscownpurLogo from "../ui/MoscownpurLogo";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 

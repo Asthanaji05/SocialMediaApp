@@ -1,291 +1,264 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { Settings, MapPin, Trash2 } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { Settings, MapPin, Trash2, Grid, Bookmark, Users, Heart, Calendar } from "lucide-react";
 import Loading from "../UI/Loading";
 import { useAuth } from "../../contexts/AuthContext";
-import axios from "axios";
+import { useTheme } from "../../contexts/ThemeContext";
 import API from "../../utils/api";
+import { Button } from "@/components/ui/button";
+
 const UserProfile = () => {
-  const { user, setUser,logout } = useAuth();
+  const { user, setUser, logout } = useAuth();
+  const { primaryColor } = useTheme();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [activeTab, setActiveTab] = useState("posts");
   const [followingUsers, setFollowingUsers] = useState([]);
   const [topPosts, setTopPosts] = useState([]);
   const [savedPosts, setSavedPosts] = useState([]);
 
-useEffect(() => {
-  const fetchSavedPosts = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await API.get(
-        `/users/${user._id}/saved-posts`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setSavedPosts(res.data);
-    } catch (err) {
-      // console.error("Error fetching saved posts:", err);
-    }
-  };
-
-  if (user?._id) fetchSavedPosts();
-}, [user]);
-
-
+  // --- DATA FETCHING ---
   useEffect(() => {
-    const fetchTopPosts = async () => {
+    const fetchAllData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token || !user?._id) return;
+
       try {
-        const token = localStorage.getItem("token");
-        const res = await API.get(
-          `/users/top-posts/${user._id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setTopPosts(res.data);
+        const [savedRes, topRes, followingRes] = await Promise.all([
+          API.get(`/users/${user._id}/saved-posts`, { headers: { Authorization: `Bearer ${token}` } }),
+          API.get(`/users/top-posts/${user._id}`, { headers: { Authorization: `Bearer ${token}` } }),
+          API.get(`/users/${user._id}/following`, { headers: { Authorization: `Bearer ${token}` } })
+        ]);
+
+        setSavedPosts(savedRes.data || []);
+        setTopPosts(topRes.data || []);
+        setFollowingUsers(followingRes.data || []);
       } catch (err) {
-        // console.error("Error fetching top posts:", err);
+        // console.error(err);
       }
     };
 
-    if (user?._id) fetchTopPosts();
+    if (user?._id) fetchAllData();
   }, [user]);
 
+  // Fetch updated user profile on mount
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const response = await API.get(
-            "/users/profile",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
+          const response = await API.get("/users/profile", { headers: { Authorization: `Bearer ${token}` } });
           setUser(response.data);
           localStorage.setItem("user", JSON.stringify(response.data));
         } catch (error) {
-          // console.error("Error fetching user:", error);
           setUser(null);
         }
       }
       setLoading(false);
     };
-
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    const fetchFollowingUsers = async () => {
-      try {
-        const token = localStorage.getItem("token"); // Retrieve the token
-        const res = await API.get(
-          `/users/${user._id}/following`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Add the token to the request headers
-            },
-          }
-        );
-        setFollowingUsers(res.data);
-      } catch (err) {
-        // console.error("Error fetching following users:", err);
-      }
-    };
 
-    if (user?._id) fetchFollowingUsers();
-  }, [user]);
   const navigate = useNavigate();
   const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to delete your existence from Moscownpur?")) return;
     try {
-      const { logout } = useAuth();
-      const userId = user?._id;
-      await API.delete(`/users/${userId}`);
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      await API.delete(`/users/${user?._id}`);
       localStorage.clear();
       logout();
-      navigate("/signup"); // or home/login
-    } catch (error) {
-      // console.error("Delete error:", error);
-    }
+      navigate("/signup");
+    } catch (error) { }
   };
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white px-6 py-10">
-        <Link
-          to="/login"
-          className="underline text-[var(--primary-color)] hover:text-[var(--primary-color)]"
-        >
-          <button className="mt-6 px-6 py-3 rounded-full bg-[var(--primary-color)] text-black font-semibold hover:bg-opacity-80">
-            Login Now
-          </button>
-        </Link>
-      </div>
-    );
-  }
+  if (loading) return <Loading />;
+  if (!user) return <div className="min-h-screen bg-black text-white flex items-center justify-center font-nerko text-3xl">Please Login</div>;
 
   return (
-    <div className="bg-black text-white min-h-screen flex items-center justify-center px-6 py-1">
-      <div className="max-w-4xl mx-auto pt-20 px-1">
-        <div className="bg-black text-white rounded-xl shadow-sm p-1 mb-6">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-5">
+    <div className="min-h-screen bg-black text-white font-sans selection:bg-[var(--primary-color)] selection:text-black pb-20">
+
+      {/* --- PROFILE HEADER --- */}
+      <div className="relative mb-20">
+        {/* Banner / Cover Gradient */}
+        <div
+          className="h-48 w-full bg-gradient-to-b from-[var(--primary-color)]/20 to-black relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+        </div>
+
+        {/* Profile Card Info - Floating */}
+        <div className="absolute top-28 left-0 right-0 px-6">
+          <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-end md:items-center gap-6">
+
+            {/* Avatar */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-tr from-[var(--primary-color)] to-white rounded-full opacity-70 blur group-hover:opacity-100 transition duration-500"></div>
               <img
                 src={user.image || "https://picsum.photos/200/300"}
                 alt="Profile"
-                className="w-24 h-24 rounded-full object-cover"
+                className="relative w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-black"
               />
-              {/* Username */}
-              <div>
-                <h1 className="text-2xl font-bold text-white">
-                  {user.firstName} {user.lastName}
-                </h1>
-                <p className="text-white">@{user.userName || "username"}</p>
-                <div className="flex items-center mt-2 text-sm text-gray-200">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  <span>{user.address || "Location not set"}</span>
-                  {/* <LinkIcon className="h-4 w-4 ml-4 mr-1" />
-                  <a href="#" className="text-indigo-600">
-                    {user.website || "website.com"}
-                  </a> */}
-                </div>
+            </div>
+
+            {/* Text Info */}
+            <div className="flex-1 mb-2">
+              <h1 className="text-4xl md:text-5xl font-nerko text-white leading-none">
+                {user.firstName} {user.lastName}
+              </h1>
+              <p className="text-gray-400 font-borel text-lg">@{user.userName || "creator"}</p>
+              <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {user.address || "Nowhere"}</span>
+                <span>•</span>
+                <span>Joined {new Date().getFullYear()}</span>
               </div>
             </div>
-            <div className="flex flex-col items-end ml-4">
-            <Link to="/edit-profile">
-              <button className="w-36 flex items-center px-4 py-2 border border-gray-200 rounded-md text-sm font-medium text-white hover:bg-gray-50 hover:text-[var(--primary-color)] bg-[var(--primary-color)]">
-                <Settings className="h-4 w-4 mr-2" />
-                Edit Profile
-              </button>
-            </Link>
-            <button
-              onClick={handleDeleteAccount}
-              className="w-36 flex items-center px-4 py-2 border border-gray-200 rounded-md text-sm font-medium text-red-600 hover:bg-gray-50  bg-black"
-            >
-              <Trash2 className="h-4 w-4 mr-2"/>Delete Profile
-            </button>
-            </div>
-            
-          </div>
 
-          <div className="mt-6">
-            <p className="text-gray-200">{user.about || "No bio available"}</p>
-          </div>
-
-          <div className="mt-6 flex space-x-6">
-            <div>
-              <span className="font-bold text-gray-200">
-                {user.posts?.length || 0}
-              </span>
-              <span className="ml-1 text-gray-300">Posts</span>
-            </div>
-            <div>
-              <span className="font-bold text-gray-200">
-                {user.followers?.length || 0}
-              </span>
-              <span className="ml-1 text-gray-300">Followers</span>
-            </div>
-            <div>
-              <span className="font-bold text-gray-200">
-                {user.following?.length || 0}
-              </span>
-              <span className="ml-1 text-gray-300">Following</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Following Users List */}
-        <div className="bg-black text-white rounded-xl shadow-sm p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Following</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {followingUsers.map((followedUser) => (
-              <div
-                key={followedUser._id}
-                className="flex items-center space-x-3 bg-gray-800 p-3 rounded-lg"
+            {/* Actions */}
+            <div className="flex gap-3 mb-4">
+              <Link to="/edit-profile">
+                <Button variant="outline" className="rounded-full border-white/20 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] bg-black/50 backdrop-blur-md">
+                  <Settings className="w-4 h-4 mr-2" /> Edit
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                className="rounded-full text-red-500 hover:text-red-400 hover:bg-red-500/10"
+                onClick={handleDeleteAccount}
               >
-                <img
-                  src={followedUser.image || "https://picsum.photos/200"}
-                  alt="user"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-medium">
-                    {followedUser.firstName} {followedUser.lastName}
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    @{followedUser.userName}
-                  </p>
-                </div>
-              </div>
-            ))}
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+
           </div>
         </div>
+      </div>
 
-        {/* Top Posts Section */}
-        <div className="bg-black text-white rounded-xl shadow-sm p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Top Posts</h2>
-          {topPosts.length === 0 ? (
-            <p className="text-gray-400">No top posts found.</p>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {topPosts.map((post) => (
-                <div
-                  key={post._id}
-                  className="bg-gray-800 p-4 rounded-lg shadow-md"
-                >
-                  <p className="font-semibold">
-                    {post.description?.slice(0, 100) || "No description"}...
-                  </p>
-                  <p className="text-sm text-gray-400 mt-2">
-                    Likes: {post.likes?.length || 0}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    {new Date(post.createdAt).toLocaleString()}
-                  </p>
-                </div>
-              ))}
-            </div>
+      {/* --- BIO & STATS --- */}
+      <div className="max-w-4xl mx-auto px-6 mt-12 mb-12">
+        {/* Bio */}
+        <div className="mb-8 max-w-2xl">
+          <p className="text-xl text-gray-300 font-borel leading-relaxed">
+            "{user.about || "Just another creator traversing the Moscownpur universe."}"
+          </p>
+        </div>
+
+        {/* Stats */}
+        <div className="flex gap-8 md:gap-16 border-y border-white/10 py-6">
+          <div className="text-center md:text-left">
+            <span className="block text-3xl font-nerko text-white">{user.posts?.length || 0}</span>
+            <span className="text-sm text-gray-500 uppercase tracking-widest">Creations</span>
+          </div>
+          <div className="text-center md:text-left">
+            <span className="block text-3xl font-nerko text-white">{user.followers?.length || 0}</span>
+            <span className="text-sm text-gray-500 uppercase tracking-widest">Trusting</span>
+          </div>
+          <div className="text-center md:text-left">
+            <span className="block text-3xl font-nerko text-white">{user.following?.length || 0}</span>
+            <span className="text-sm text-gray-500 uppercase tracking-widest">Trusted</span>
+          </div>
+        </div>
+      </div>
+
+      {/* --- TABS --- */}
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="flex gap-8 mb-8 border-b border-white/10">
+          <button
+            onClick={() => setActiveTab("posts")}
+            className={`pb-3 text-lg font-nerko tracking-wide transition-all relative ${activeTab === "posts" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
+          >
+            Top Creations
+            {activeTab === "posts" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--primary-color)] shadow-[0_0_10px_var(--primary-color)]"></span>}
+          </button>
+          <button
+            onClick={() => setActiveTab("saved")}
+            className={`pb-3 text-lg font-nerko tracking-wide transition-all relative ${activeTab === "saved" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
+          >
+            Saved
+            {activeTab === "saved" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--primary-color)] shadow-[0_0_10px_var(--primary-color)]"></span>}
+          </button>
+          <button
+            onClick={() => setActiveTab("network")}
+            className={`pb-3 text-lg font-nerko tracking-wide transition-all relative ${activeTab === "network" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
+          >
+            Circle ({followingUsers.length})
+            {activeTab === "network" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--primary-color)] shadow-[0_0_10px_var(--primary-color)]"></span>}
+          </button>
+        </div>
+
+        {/* --- CONTENT AREA --- */}
+        <div className="min-h-[300px] animate-in fade-in duration-500">
+          {activeTab === "posts" && (
+            topPosts.length > 0 ? (
+              <div className="grid md:grid-cols-2 gap-4">
+                {topPosts.map(post => (
+                  <PostCard key={post._id} post={post} />
+                ))}
+              </div>
+            ) : (
+              <EmptyState icon={Grid} label="No creations yet. Start building." />
+            )
+          )}
+
+          {activeTab === "saved" && (
+            savedPosts.length > 0 ? (
+              <div className="grid md:grid-cols-2 gap-4">
+                {savedPosts.map(post => (
+                  <PostCard key={post._id} post={post} />
+                ))}
+              </div>
+            ) : (
+              <EmptyState icon={Bookmark} label="Nothing saved in your vault." />
+            )
+          )}
+
+          {activeTab === "network" && (
+            followingUsers.length > 0 ? (
+              <div className="grid md:grid-cols-3 gap-4">
+                {followingUsers.map(u => (
+                  <div key={u._id} className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center gap-3 hover:border-[var(--primary-color)]/30 transition-colors group cursor-pointer">
+                    <div className="relative">
+                      <img src={u.image || "https://picsum.photos/200"} className="w-12 h-12 rounded-full object-cover group-hover:ring-2 ring-[var(--primary-color)] transition-all" />
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="font-bold text-white truncate font-nerko text-lg">{u.firstName} {u.lastName}</p>
+                      <p className="text-xs text-gray-500 truncate font-mono">@{u.userName}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState icon={Users} label="Your circle is empty." />
+            )
           )}
         </div>
-
-        {/* Saved Posts Section */}
-<div className="bg-black text-white rounded-xl shadow-sm p-6 mb-6">
-  <h2 className="text-xl font-semibold mb-4">Saved Posts</h2>
-  {savedPosts.length === 0 ? (
-    <p className="text-gray-400">No saved posts yet.</p>
-  ) : (
-    <div className="grid grid-cols-1 gap-4">
-      {savedPosts.map((post) => (
-        <div
-          key={post._id}
-          className="bg-gray-800 p-4 rounded-lg shadow-md"
-        >
-          <p className="font-semibold">
-            {post.description?.slice(0, 100) || "No description"}...
-          </p>
-          <p className="text-sm text-gray-400 mt-2">
-            Likes: {post.likes?.length || 0}
-          </p>
-          <p className="text-sm text-gray-500">
-            {new Date(post.createdAt).toLocaleString()}
-          </p>
-        </div>
-      ))}
-    </div>
-  )}
-</div>
-
       </div>
+
     </div>
   );
 };
+
+// --- HELPER COMPONENTS ---
+
+const PostCard = ({ post }) => (
+  <div className="bg-[#0a0a0a] border border-white/10 rounded-xl p-6 hover:border-[var(--primary-color)]/50 transition-all group hover:bg-white/[0.02]">
+    <p className="font-medium text-gray-200 line-clamp-3 mb-6 font-sans leading-relaxed text-lg">
+      {post.description || "Untitled Thought"}
+    </p>
+    <div className="flex justify-between items-center text-xs text-gray-500 border-t border-white/5 pt-4">
+      <span className="flex items-center gap-2 group-hover:text-[var(--primary-color)] transition-colors">
+        <Heart className="w-4 h-4" /> {post.likes?.length || 0} Appreciations
+      </span>
+      <span className="flex items-center gap-2">
+        <Calendar className="w-4 h-4" /> {new Date(post.createdAt).toLocaleDateString()}
+      </span>
+    </div>
+  </div>
+);
+
+const EmptyState = ({ icon: Icon, label }) => (
+  <div className="flex flex-col items-center justify-center py-20 text-gray-600 border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
+    <Icon className="w-12 h-12 mb-4 opacity-30 text-white" />
+    <p className="font-borel text-xl text-gray-500">{label}</p>
+  </div>
+);
 
 export default UserProfile;

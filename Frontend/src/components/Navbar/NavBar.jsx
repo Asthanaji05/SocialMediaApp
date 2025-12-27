@@ -22,43 +22,39 @@ const NavBar = () => {
           backgroundImage: `linear-gradient(to right, var(--primary-color),var(--primary-color))`,
         }}
       >
-        MaitriLok
+        Moscownpur Circles
       </Link>
 
       <div className="hidden md:flex gap-6 items-center">
         <Link
           to="/"
-          className={`hover:text-[var(--primary-color)] transition ${
-            isActive("/") ? "text-[var(--primary-color)] font-semibold" : ""
-          }`}
+          className={`hover:text-[var(--primary-color)] transition ${isActive("/") ? "text-[var(--primary-color)] font-semibold" : ""
+            }`}
         >
           Home
         </Link>
         <Link
           to="/feed"
-          className={`hover:text-[var(--primary-color)] transition ${
-            isActive("/feed") ? "text-[var(--primary-color)] font-semibold" : ""
-          }`}
+          className={`hover:text-[var(--primary-color)] transition ${isActive("/feed") ? "text-[var(--primary-color)] font-semibold" : ""
+            }`}
         >
           Feed
         </Link>
-        
+
 
         {!user ? (
           <>
             <Link
               to="/login"
-              className={`hover:text-[var(--primary-color)] transition ${
-                isActive("/login") ? "text-[var(--primary-color)] font-semibold" : ""
-              }`}
+              className={`hover:text-[var(--primary-color)] transition ${isActive("/login") ? "text-[var(--primary-color)] font-semibold" : ""
+                }`}
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className={`hover:text-[var(--primary-color)] transition ${
-                isActive("/signup") ? "text-[var(--primary-color)] font-semibold" : ""
-              }`}
+              className={`hover:text-[var(--primary-color)] transition ${isActive("/signup") ? "text-[var(--primary-color)] font-semibold" : ""
+                }`}
             >
               Sign Up
             </Link>
@@ -67,30 +63,27 @@ const NavBar = () => {
           <>
             <Link
               to="/chat"
-              className={`hover:text-[var(--primary-color)] transition ${
-                isActive("/chat") ? "text-[var(--primary-color)] font-semibold" : ""
-              }`}
+              className={`hover:text-[var(--primary-color)] transition ${isActive("/chat") ? "text-[var(--primary-color)] font-semibold" : ""
+                }`}
             >
               Chat
             </Link>
             <Link
-          to="/profile"
-          className={`hover:text-[var(--primary-color)] transition ${
-            isActive("/profile") ? "text-[var(--primary-color)] font-semibold" : ""
-          }`}
-        >
-          Profile
-        </Link>
-        <Link
-          to="/my-network"
-          className={`hover:text-[var(--primary-color)] transition ${
-            isActive("/my-network") ? "text-[var(--primary-color)] font-semibold" : ""
-          }`}
-        >
-          My Network
-        </Link>
-        <SearchBar />
-            <Logout/>
+              to="/profile"
+              className={`hover:text-[var(--primary-color)] transition ${isActive("/profile") ? "text-[var(--primary-color)] font-semibold" : ""
+                }`}
+            >
+              Profile
+            </Link>
+            <Link
+              to="/my-network"
+              className={`hover:text-[var(--primary-color)] transition ${isActive("/my-network") ? "text-[var(--primary-color)] font-semibold" : ""
+                }`}
+            >
+              My Network
+            </Link>
+            <SearchBar />
+            <Logout />
           </>
         )}
       </div>

@@ -11,7 +11,7 @@ const Home = () => {
   const { primaryColor } = useTheme();
 
   useEffect(() => {
-    document.title = "Welcome Home | MaitriLok";
+    document.title = "Welcome Home | Moscownpur Circles";
   }, []);
 
   // Helper to apply dynamic primary color styles
@@ -43,7 +43,7 @@ const Home = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            MaitriLok is a soulful social universe rooted in <span className="font-semibold text-[var(--primary-color)]">Maitri</span> (friendship).
+            Moscownpur Circles is a soulful social universe rooted in <span className="font-semibold text-[var(--primary-color)]">Community</span>.
             Connect without noise, share without fear, and bond without limits.
           </p>
 
@@ -93,7 +93,7 @@ const Home = () => {
               Our Mission
             </h2>
             <p className="text-gray-400 text-lg leading-relaxed">
-              In a digital age of fleeting interactions, <strong className="text-white">MaitriLok</strong> stands for permanence.
+              In a digital age of fleeting interactions, <strong className="text-white">Moscownpur Circles</strong> stands for permanence.
               Our mission is to bring back the essence of real connections—building a sanctuary where trust, expression,
               and cultural harmony thrive.
             </p>
@@ -131,7 +131,7 @@ const Home = () => {
       <section className="py-20 px-6 bg-white/5">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose MaitriLok?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Moscownpur Circles?</h2>
             <p className="text-gray-400">Designed for those who crave authenticity.</p>
           </div>
 

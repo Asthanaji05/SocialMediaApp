@@ -133,7 +133,7 @@ const UserProfile = () => {
       </div>
 
       {/* --- BIO & STATS --- */}
-      <div className="max-w-4xl mx-auto px-6 mt-12 mb-12">
+      <div className="max-w-4xl mx-auto px-6 mt-32 mb-12">
         {/* Bio */}
         <div className="mb-8 max-w-2xl">
           <p className="text-xl text-gray-300 font-borel leading-relaxed">

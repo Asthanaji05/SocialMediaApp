@@ -618,6 +618,85 @@ export const syncMoscownpurProfile = async (req, res) => {
   }
 };
 
+// Supabase SSO Login
+export const supabaseLogin = async (req, res) => {
+  const { session } = req.body;
+
+  if (!session || !session.user) {
+    return res.status(400).json({ message: "Invalid session data" });
+  }
+
+  const { email, id: moscownpurId, user_metadata } = session.user;
+  const firstName = user_metadata?.full_name?.split(' ')[0] || user_metadata?.name?.split(' ')[0] || "Citizen";
+  const lastName = user_metadata?.full_name?.split(' ').slice(1).join(' ') || user_metadata?.name?.split(' ').slice(1).join(' ') || "";
+
+  try {
+    // 1. Find or create user in MongoDB
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Create new user if doesn't exist
+      // We need a unique username. Let's derive it.
+      let baseUsername = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
+      let userName = baseUsername;
+      let counter = 1;
+
+      while (await User.findOne({ userName })) {
+        userName = `${baseUsername}${counter}`;
+        counter++;
+      }
+
+      user = new User({
+        email,
+        firstName,
+        lastName,
+        userName,
+        image: user_metadata?.avatar_url || user_metadata?.picture,
+        moscownpurId,
+        isRealmLinked: true
+      });
+
+      await user.save();
+    } else {
+      // Update existing user with moscownpurId if not already linked
+      let updated = false;
+      if (!user.moscownpurId) {
+        user.moscownpurId = moscownpurId;
+        updated = true;
+      }
+      if (!user.isRealmLinked) {
+        user.isRealmLinked = true;
+        updated = true;
+      }
+      if (updated) await user.save();
+    }
+
+    // 2. Generate Maitrilok JWT
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d", // Longer session for SSO
+    });
+
+    res.status(200).json({
+      message: "SSO Login successful",
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userName: user.userName,
+        image: user.image,
+        isRealmLinked: user.isRealmLinked
+      }
+    });
+
+  } catch (error) {
+    console.error("SSO Login Error:", error);
+    res.status(500).json({ message: "SSO Login failed", error: error.message });
+  }
+};
+
+
 export const getMoscownpurStatus = async (req, res) => {
   const userId = req.user.userId;
   try {

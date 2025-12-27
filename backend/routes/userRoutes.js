@@ -19,7 +19,8 @@ import {
   googleSignup,
   checkGoogleUser,
   syncMoscownpurProfile,
-  getMoscownpurStatus
+  getMoscownpurStatus,
+  supabaseLogin
 } from "../controllers/userController.js";
 import { fetchUserTopPosts as getUserTopPosts, getSavedPosts } from "../controllers/postController.js"; // Import the getUserTopPosts function
 import { verifyToken } from "../middleware/authMiddleware.js"; // Import the verifyToken middleware
@@ -74,6 +75,9 @@ router.post('/check-google-user', checkGoogleUser);
 // Moscownpur (RealM) Cross-Platform Sync
 router.post('/profile/sync-realm', verifyToken, syncMoscownpurProfile);
 router.get('/profile/realm-status', verifyToken, getMoscownpurStatus);
+
+// Supabase SSO
+router.post('/supabase-login', supabaseLogin);
 
 
 export default router;

@@ -20,9 +20,14 @@ const app = express();
 const server = http.createServer(app);
 
 // Initialize Socket.io
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_URL || "https://moscownpur-circles.onrender.com"
+];
+
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
   }
 });
@@ -33,7 +38,7 @@ app.use(express.json());
 
 // CORS Middleware to allow cookies in frontend
 app.use(cors({
-  origin: "http://localhost:5173",  // Ensure frontend URL is correct
+  origin: allowedOrigins,
   credentials: true,
 }));
 
@@ -95,6 +100,16 @@ const listRoutes = (app) => {
 
 // Log all routes
 // listRoutes(app);
+
+// Serve static files from Frontend build (for production)
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'backend/public')));
+
+  // Serve index.html for all other routes (SPA support)
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'backend/public', 'index.html'));
+  });
+}
 
 
 

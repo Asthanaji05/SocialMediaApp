@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: moscownpur-circles
+    runtime: node
+    plan: free
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: cd backend && NODE_ENV=production npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: REALM_SUPABASE_URL
+        sync: false
+      - key: REALM_SUPABASE_ANON_KEY
+        sync: false
+      - key: REALM_SUPABASE_ACCESS_TOKEN
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: PORT
+        value: 10000
+      - key: FRONTEND_URL
+        value: https://moscownpur-circles.onrender.com

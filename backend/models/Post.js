@@ -25,6 +25,7 @@ const postSchema = new mongoose.Schema(
     shareToken: { type: String, default: null },
     tags: [{ type: String, trim: true }],
     reach: { type: Number, default: 0 }, // View count / Reach
+    viewers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Unique viewers
   },
   { timestamps: true }
 );

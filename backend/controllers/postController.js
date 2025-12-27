@@ -357,8 +357,36 @@ export const fetchPost = async (req, res) => {
     res.status(200).json({ data: post });
   } catch (error) {
     console.error("Fetch post error:", error);
-
-    // If there's a server error, return 500
     res.status(500).json({ error: "Server error" });
+  }
+};
+
+// 🔥 Increment Reach (Unique Impression)
+export const incrementReach = async (req, res) => {
+  const { postId } = req.params;
+  const userId = req.user.id; // From verifyToken middleware
+
+  try {
+    // Attempt to update only if userId is NOT in the viewers array
+    const post = await Post.findOneAndUpdate(
+      { _id: postId, viewers: { $ne: userId } },
+      {
+        $addToSet: { viewers: userId },
+        $inc: { reach: 1 }
+      },
+      { new: true }
+    );
+
+    // If no update happened, either post exists or user already seen it
+    if (!post) {
+      const existingPost = await Post.findById(postId);
+      if (!existingPost) return res.status(404).json({ message: "Post not found" });
+      return res.status(200).json({ reach: existingPost.reach, message: "Already seen" });
+    }
+
+    res.status(200).json({ reach: post.reach });
+  } catch (error) {
+    console.error("Reach update error:", error);
+    res.status(500).json({ message: "Error updating reach" });
   }
 };

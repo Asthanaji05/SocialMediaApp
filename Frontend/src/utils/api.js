@@ -5,6 +5,15 @@ const API = axios.create({
   withCredentials: true,  // Ensure cookies/sessions work properly
 });
 
+// Request Interceptor to attach JWT
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // Response Interceptor to handle Token Expiry
 API.interceptors.response.use(
   (response) => response,

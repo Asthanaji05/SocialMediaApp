@@ -196,9 +196,6 @@ const OtherPostCard = ({ post }) => (
         <span className="flex items-center gap-1.5 group-hover:text-[var(--primary-color)] transition-colors">
           <Heart className="w-4 h-4" /> {post.likes?.length || 0}
         </span>
-        <span className="flex items-center gap-1.5">
-          <BarChart3 className="w-4 h-4" /> {post.reach || 0} Reach
-        </span>
       </div>
       <span className="flex items-center gap-2">
         <Calendar className="w-4 h-4" /> {new Date(post.createdAt).toLocaleDateString()}

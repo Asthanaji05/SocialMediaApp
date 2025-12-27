@@ -32,13 +32,13 @@ const PostDetail = () => {
   useEffect(() => {
     if (token) fetchPost();
     else console.error("No token provided");
-    
+
   }, [token]);
   useEffect(() => {
-  if (post) {
-    console.log("Fetched post:", post);
-  }
-}, [post]);
+    if (post) {
+      console.log("Fetched post:", post);
+    }
+  }, [post]);
 
 
   if (!post) return <div className="text-white p-4">Loading post...</div>;
@@ -57,8 +57,9 @@ const PostDetail = () => {
         userId={post.userId}
         createdAt={post.createdAt}
         shareToken={token}
+        reach={post.reach}
       />
-      
+
 
     </div>
   );

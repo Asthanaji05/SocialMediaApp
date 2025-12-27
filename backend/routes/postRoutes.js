@@ -14,8 +14,10 @@ import {
   unsavePost,
   getPostIdFromShareToken,
   fetchPost,
+  incrementReach,
 } from "../controllers/postController.js";
 import { upload } from "../middleware/uploadMiddleware.js"; // Import multer middleware for file uploads
+import { verifyToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -43,6 +45,7 @@ router.post('/unsave', unsavePost);
 router.get("/share/:token", getPostIdFromShareToken);
 
 router.get("/fetchPostById/:postId", fetchPost); // Fetch post by ID
+router.put("/reach/:postId", verifyToken, incrementReach); // Increment post reach
 
 
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../utils/api.js";
 import { useAuth } from "../../contexts/AuthContext";
@@ -23,14 +23,17 @@ const Post = ({
   userId,
   createdAt,
   shareToken,
+  reach: initialReach,
 }) => {
   const navigate = useNavigate();
+  const postRef = useRef(null);
   const { user } = useAuth();
   const currentUserId = user?._id;
 
   // -- State --
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes?.length || 0);
+  const [reach, setReach] = useState(initialReach || 0);
   const [saved, setSaved] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [commentList, setCommentList] = useState(comments || []);
@@ -57,6 +60,30 @@ const Post = ({
     };
     checkSavedStatus();
   }, [currentUserId, _id]);
+
+  // Reach Tracking (Intersection Observer)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          // Increment reach on server
+          API.put(`/posts/reach/${_id}`).then(res => {
+            setReach(res.data.reach);
+          }).catch(err => console.error("Reach error:", err));
+
+          // Once tracked, stop observing this post
+          observer.unobserve(postRef.current);
+        }
+      },
+      { threshold: 0.5 } // Track when 50% of the post is visible
+    );
+
+    if (postRef.current) {
+      observer.observe(postRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [_id]);
 
   // -- Handlers --
   const handleLikeToggle = async () => {
@@ -133,7 +160,7 @@ const Post = ({
 
 
   return (
-    <div className="bg-[#0f0f0f] border border-white/10 rounded-2xl overflow-hidden hover:border-[var(--primary-color)]/30 hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)] transition-all duration-300">
+    <div ref={postRef} className="bg-[#0f0f0f] border border-white/10 rounded-2xl overflow-hidden hover:border-[var(--primary-color)]/30 hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)] transition-all duration-300">
 
       {/* --- Header --- */}
       <div className="p-4 flex justify-between items-start">
@@ -239,6 +266,14 @@ const Post = ({
           <button onClick={handleShare} className="hover:text-white transition-colors">
             <Share2 size={20} />
           </button>
+
+          {/* Reach Display (Private to Creator) */}
+          {currentUserId === userId && (
+            <div className="flex items-center gap-1.5 ml-2 cursor-default" title="Private Impressions">
+              <span className="text-xs font-nerko uppercase tracking-wider opacity-60">Reach</span>
+              <span className="text-sm font-bold text-white">{reach}</span>
+            </div>
+          )}
         </div>
 
         {/* Bookmark */}

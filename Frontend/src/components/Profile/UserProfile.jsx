@@ -120,9 +120,9 @@ const UserProfile = () => {
 
             {/* Actions */}
             <div className="flex gap-3 mb-4">
-              <Link to="/edit-profile">
+              <Link to="/settings">
                 <Button variant="outline" className="rounded-full border-white/20 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] bg-black/50 backdrop-blur-md">
-                  <Settings className="w-4 h-4 mr-2" /> Edit
+                  <Settings className="w-4 h-4 mr-2" /> Settings
                 </Button>
               </Link>
               <Button

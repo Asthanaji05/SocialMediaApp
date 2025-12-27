@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import API from "../utils/api";
 import Loading from "../components/UI/Loading";
 import { Link } from "react-router-dom";
-import { Flame, Compass, Bookmark, TrendingUp, Users, BookOpen } from "lucide-react";
+import { Flame, Compass, Bookmark, TrendingUp, Users, BookOpen, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Feed = () => {
@@ -54,10 +54,13 @@ const Feed = () => {
               ) : (
                 <div className="w-12 h-12 rounded-full border border-white/10 bg-white/10 flex items-center justify-center text-white font-bold">{user.firstName?.[0]}</div>
               )}
-              <div>
-                <h3 className="font-bold text-white text-lg">{user.firstName} {user.lastName}</h3>
-                <p className="text-sm text-gray-500">@{user.userName}</p>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-white text-lg truncate">{user.firstName} {user.lastName}</h3>
+                <p className="text-sm text-gray-500 truncate">@{user.userName}</p>
               </div>
+              <Link to="/settings" className="p-2 rounded-full hover:bg-white/10 transition-colors text-gray-500 hover:text-white">
+                <Settings size={18} />
+              </Link>
             </div>
 
             {/* Nav Links */}

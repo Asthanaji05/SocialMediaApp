@@ -35,7 +35,7 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/profile/:userId" element={<OtherUserProfile />} />
               <Route path="/profile" element={<UserProfile />} />
-              <Route path="/edit-profile" element={<EditProfile />} />
+              <Route path="/settings" element={<EditProfile />} />
               <Route path="/google-signup" element={<GoogleSignup />} />
               <Route path="/feed" element={<Feed />} />
               <Route path="/feed/post" element={<Post />} />

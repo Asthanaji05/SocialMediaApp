@@ -80,11 +80,15 @@ const CreatePost = ({ onPostCreated = () => { } }) => {
       <div className="flex gap-4">
         {/* User Avatar */}
         <div className="shrink-0">
-          <img
-            src={user.image || "https://picsum.photos/200"}
-            alt="User"
-            className="w-10 h-10 rounded-full object-cover border border-white/10"
-          />
+          {user.image ? (
+            <img
+              src={user.image}
+              alt="User"
+              className="w-10 h-10 rounded-full object-cover border border-white/10"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-bold border border-white/10">{user.firstName?.[0]}</div>
+          )}
         </div>
 
         {/* Input Area */}

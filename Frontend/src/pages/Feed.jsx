@@ -49,7 +49,11 @@ const Feed = () => {
           <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6">
             {/* Mini Profile */}
             <div className="flex items-center gap-3 mb-8 pb-8 border-b border-white/5">
-              <img src={user.image || "https://picsum.photos/200"} className="w-12 h-12 rounded-full object-cover border border-white/10" />
+              {user.image ? (
+                <img src={user.image} className="w-12 h-12 rounded-full object-cover border border-white/10" />
+              ) : (
+                <div className="w-12 h-12 rounded-full border border-white/10 bg-white/10 flex items-center justify-center text-white font-bold">{user.firstName?.[0]}</div>
+              )}
               <div>
                 <h3 className="font-bold text-white text-lg">{user.firstName} {user.lastName}</h3>
                 <p className="text-sm text-gray-500">@{user.userName}</p>

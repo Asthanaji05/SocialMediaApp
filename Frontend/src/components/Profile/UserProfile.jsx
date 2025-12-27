@@ -92,11 +92,17 @@ const UserProfile = () => {
             {/* Avatar */}
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-tr from-[var(--primary-color)] to-white rounded-full opacity-70 blur group-hover:opacity-100 transition duration-500"></div>
-              <img
-                src={user.image || "https://picsum.photos/200/300"}
-                alt="Profile"
-                className="relative w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-black"
-              />
+              {user.image ? (
+                <img
+                  src={user.image}
+                  alt="Profile"
+                  className="relative w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-black"
+                />
+              ) : (
+                <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-black bg-white/10 flex items-center justify-center text-white text-6xl font-bold">
+                  {user.firstName?.[0]}
+                </div>
+              )}
             </div>
 
             {/* Text Info */}
@@ -216,7 +222,13 @@ const UserProfile = () => {
                 {followingUsers.map(u => (
                   <div key={u._id} className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center gap-3 hover:border-[var(--primary-color)]/30 transition-colors group cursor-pointer">
                     <div className="relative">
-                      <img src={u.image || "https://picsum.photos/200"} className="w-12 h-12 rounded-full object-cover group-hover:ring-2 ring-[var(--primary-color)] transition-all" />
+                      {u.image ? (
+                        <img src={u.image} className="w-12 h-12 rounded-full object-cover group-hover:ring-2 ring-[var(--primary-color)] transition-all" />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white font-bold group-hover:ring-2 ring-[var(--primary-color)] transition-all">
+                          {u.firstName?.[0]}
+                        </div>
+                      )}
                     </div>
                     <div className="overflow-hidden">
                       <p className="font-bold text-white truncate font-nerko text-lg">{u.firstName} {u.lastName}</p>

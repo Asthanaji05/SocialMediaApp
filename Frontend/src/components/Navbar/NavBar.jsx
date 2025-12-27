@@ -6,6 +6,8 @@ import Logout from "../Auth/Logout";
 import SearchBar from "../Search/SearchBar"; // 👈 Import at top
 
 
+import MoscownpurLogo from "../UI/MoscownpurLogo";
+
 const NavBar = () => {
   const { primaryColor } = useTheme();
   const { user } = useAuth();
@@ -14,15 +16,18 @@ const NavBar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="bg-black text-white px-6 py-4 flex justify-between items-center shadow-md">
+    <nav className="bg-black text-white px-6 py-4 flex justify-between items-center shadow-md border-b border-white/10">
       <Link
         to="/"
-        className="text-2xl font-extrabold bg-clip-text text-transparent"
+        className="flex items-center gap-2 text-2xl font-extrabold bg-clip-text text-transparent group"
         style={{
           backgroundImage: `linear-gradient(to right, var(--primary-color),var(--primary-color))`,
         }}
       >
-        Moscownpur Circles
+        <MoscownpurLogo className="w-8 h-8 text-[var(--primary-color)]" />
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color)]">
+          Moscownpur Circles
+        </span>
       </Link>
 
       <div className="hidden md:flex gap-6 items-center">

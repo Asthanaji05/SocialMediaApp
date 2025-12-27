@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Users, MessageCircle, Fingerprint, ZapOff } from "lucide-react";
+import MoscownpurLogo from "../components/UI/MoscownpurLogo";
 
 const Home = () => {
   const { primaryColor } = useTheme();
@@ -28,18 +29,22 @@ const Home = () => {
         ></div>
 
         <div className="relative z-10 max-w-4xl mx-auto space-y-8">
-          <Badge variant="outline" className="px-4 py-1 text-sm border-white/20 text-gray-400 uppercase tracking-widest backdrop-blur-sm">
+          <Badge variant="outline" className="px-6 py-2 text-xl border-white/20 text-gray-300 tracking-widest backdrop-blur-sm font-borel lowercase">
             Intent
           </Badge>
 
-          <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-tight">
+          <div className="flex justify-center mb-6">
+            <MoscownpurLogo className="w-32 h-32 text-[var(--primary-color)] animate-spin-slow" />
+          </div>
+
+          <h1 className="text-6xl md:text-9xl tracking-wide leading-none font-nerko">
             Moscownpur<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--primary-color)] to-white">
               Circles
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-300 font-light tracking-wide">
+          <p className="text-2xl md:text-4xl text-gray-300 tracking-wide font-borel mt-8">
             The human layer of Moscownpur.
           </p>
         </div>
@@ -49,9 +54,9 @@ const Home = () => {
 
       {/* The Manifesto - English */}
       <section className="py-24 px-6 relative">
-        <div className="max-w-3xl mx-auto text-center space-y-12">
+        <div className="max-w-4xl mx-auto text-center space-y-16">
 
-          <p className="text-2xl md:text-3xl text-white/90 leading-relaxed font-serif italic">
+          <p className="text-5xl md:text-7xl text-white/90 leading-tight font-corinthia">
             "Where users don't just consume,<br />
             <span style={{ color: 'var(--primary-color)' }}>they belong.</span>"
           </p>
@@ -59,20 +64,20 @@ const Home = () => {
           <div className="grid gap-8 md:grid-cols-3 text-left">
             <div className="space-y-2 p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--primary-color)] transition-colors duration-500 group">
               <MessageCircle className="w-8 h-8 text-gray-500 group-hover:text-[var(--primary-color)] mb-4 transition-colors" />
-              <h3 className="text-lg font-bold text-white">Conversations</h3>
-              <p className="text-gray-400 text-sm">Not loud, <br /><span className="text-white">but meaningful.</span></p>
+              <h3 className="text-2xl text-white font-nerko">Conversations</h3>
+              <p className="text-gray-400 text-lg font-borel">Not loud, <br /><span className="text-white">but meaningful.</span></p>
             </div>
 
             <div className="space-y-2 p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--primary-color)] transition-colors duration-500 group">
               <Users className="w-8 h-8 text-gray-500 group-hover:text-[var(--primary-color)] mb-4 transition-colors" />
-              <h3 className="text-lg font-bold text-white">Connections</h3>
-              <p className="text-gray-400 text-sm">Not temporary, <br /><span className="text-white">but trusted.</span></p>
+              <h3 className="text-2xl text-white font-nerko">Connections</h3>
+              <p className="text-gray-400 text-lg font-borel">Not temporary, <br /><span className="text-white">but trusted.</span></p>
             </div>
 
             <div className="space-y-2 p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--primary-color)] transition-colors duration-500 group">
               <Fingerprint className="w-8 h-8 text-gray-500 group-hover:text-[var(--primary-color)] mb-4 transition-colors" />
-              <h3 className="text-lg font-bold text-white">Identity</h3>
-              <p className="text-gray-400 text-sm">Not performed, <br /><span className="text-white">but lived.</span></p>
+              <h3 className="text-2xl text-white font-nerko">Identity</h3>
+              <p className="text-gray-400 text-lg font-borel">Not performed, <br /><span className="text-white">but lived.</span></p>
             </div>
           </div>
 
@@ -83,11 +88,11 @@ const Home = () => {
       <section className="py-20 px-6 bg-white/5">
         <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <div className="space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+            <h2 className="text-5xl md:text-6xl leading-tight font-nerko">
               Small, Intentional<br />
               <span style={{ color: 'var(--primary-color)' }}>Communities</span>
             </h2>
-            <p className="text-gray-400 text-lg leading-relaxed">
+            <p className="text-gray-400 text-xl leading-relaxed font-borel">
               Circles are friends, thinkers, builders, and learners who create a safe, honest space within the broader world of Moscownpur.
             </p>
             <ul className="space-y-4 pt-4">
@@ -117,7 +122,7 @@ const Home = () => {
 
       {/* Final CTA */}
       <section className="py-32 px-6 text-center">
-        <h2 className="text-5xl md:text-6xl font-black mb-8 tracking-tight">Belong Here.</h2>
+        <h2 className="text-6xl md:text-8xl mb-8 tracking-wide font-nerko">Belong Here.</h2>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/login">
             <Button

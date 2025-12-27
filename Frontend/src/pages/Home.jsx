@@ -29,9 +29,6 @@ const Home = () => {
         ></div>
 
         <div className="relative z-10 max-w-4xl mx-auto space-y-8">
-          <Badge variant="outline" className="px-6 py-2 text-xl border-white/20 text-gray-300 tracking-widest backdrop-blur-sm font-borel lowercase">
-            Intent
-          </Badge>
 
           <div className="flex justify-center mb-6">
             <MoscownpurLogo className="w-32 h-32 text-[var(--primary-color)] animate-spin-slow" />

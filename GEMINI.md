@@ -6,7 +6,7 @@
 - **Frontend**: `Frontend/` (Vite, React, Tailwind CSS)
 - **Backend**: `backend/` (Express, Mongoose)
 - **Database**: MongoDB (Atlas)
-- **Auth**: JWT, Google OAuth
+- **Auth**: JWT, Google OAuth, Moscownpur ID (Supabase SSO)
 
 ## Observations
 - [x] Clean up Frontend dependencies (remove backend packages).
@@ -40,4 +40,16 @@
     - [x] Bidirectional ID mapping between MongoDB and Supabase.
     - [x] Real-time creative stats display (Worlds, Chars, XP) on profile.
     - [x] Data Migration: Initialized Realm fields for existing users.
+- [x] Authentication Redesign (Premium Glassmorphism):
+    - [x] Login, SignUp, and GoogleSignUp pages redesigned with dark theme, glassmorphism, and narrative backgrounds.
+    - [x] Theme-aware primary color system (Tailwind `primary` utility dynamically linked to `--primary-color`).
+    - [x] Fixed CSS variable mapping for transparency effects (`--primary-rgb` for rgba functions).
+    - [x] Custom fonts integrated (Bungee, Nerko One, Borel) for premium branding.
+- [x] Moscownpur ID (Unified SSO):
+    - [x] Supabase OAuth integration for cross-platform authentication.
+    - [x] Backend `/supabase-login` endpoint for automated account provisioning.
+    - [x] Frontend "Moscownpur ID" button with live pulse animation and gradient styling.
+    - [x] Collapsible legacy login (email/password) for backward compatibility.
+    - [x] Environment variable alignment (`VITE_REALM_SUPABASE_URL`, `VITE_REALM_SUPABASE_ANON_KEY`).
+    - [x] Configuration validation with `isSupabaseConfigured` flag.
 - **Port config**: Backend runs on 3000 (default), allows CORS from 5173.

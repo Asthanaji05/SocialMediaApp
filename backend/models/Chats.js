@@ -8,10 +8,15 @@ const messageSchema = new mongoose.Schema({
 });
 
 const chatSchema = new mongoose.Schema({
-   // _id: { type: String, required: true },
+    // _id: { type: String, required: true },
     messages: [messageSchema],
-    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] // Moved inside chatSchema
-}, { timestamps: true }); // Added timestamps
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    lastMessage: {
+        content: { type: String },
+        sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        timestamp: { type: Date, default: Date.now }
+    }
+}, { timestamps: true });
 
 const Chats = mongoose.model("chats", chatSchema);
 export default Chats;

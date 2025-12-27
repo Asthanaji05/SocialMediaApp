@@ -57,6 +57,14 @@ export const sendMessage = async (req, res) => {
 
     const newMessage = { sender, content };
     chat.messages.push(newMessage);
+
+    // Sync the lastMessage field for fast sidebar loading
+    chat.lastMessage = {
+      content: content,
+      sender: sender,
+      timestamp: new Date()
+    };
+
     await chat.save();
     const updatedChat = await Chats.findById(chatId).populate("messages.sender", "userName");
     const latestMessage = updatedChat.messages.at(-1);

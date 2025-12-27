@@ -17,7 +17,7 @@ import ChatPage from "./pages/ChatPage.jsx";
 import MyNetwork from "./pages/MyNetwork";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import GoogleSignup from "./components/Auth/GoogleSignUp.jsx";
+import GoogleSignup from "./components/Auth/GoogleSignup.jsx";
 import PostDetails from "./components/Feed/PostDetails";
 import AboutMoscownpur from "./pages/AboutMoscownpur";
 

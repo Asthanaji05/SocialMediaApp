@@ -7,8 +7,10 @@ import MongoStore from "connect-mongo";
 import cors from "cors";  // Ensure CORS is handled
 
 import path from 'path';
-// Serve static files from the "uploads" directory
-const __dirname = path.resolve();
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 connectDB();
@@ -66,10 +68,11 @@ io.on("connection", (socket) => {
   });
 });
 
-app.get("/", (req, res) => {
-
-  res.send("Backend is running!");
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.get("/", (req, res) => {
+    res.send("Backend is running!");
+  });
+}
 import userRoutes from "./routes/userRoutes.js";
 
 app.use("/users", userRoutes);
@@ -103,11 +106,11 @@ const listRoutes = (app) => {
 
 // Serve static files from Frontend build (for production)
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'backend/public')));
+  app.use(express.static(path.join(__dirname, 'public')));
 
   // Serve index.html for all other routes (SPA support)
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'backend/public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
   });
 }
 

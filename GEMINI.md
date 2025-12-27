@@ -11,4 +11,5 @@
 ## Observations
 - [x] Clean up Frontend dependencies (remove backend packages).
 - [x] Add `start` and `dev` scripts to backend `package.json`.
+- [x] Set up ShadCN UI (initialized & button added).
 - **Port config**: Backend runs on 3000 (default), allows CORS from 5173.

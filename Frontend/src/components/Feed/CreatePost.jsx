@@ -1,76 +1,55 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
-
 import { useAuth } from "../../contexts/AuthContext";
-
 import { useTheme } from "../../contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/UI/Loading";
 import API from "../../utils/api.js";
+import { Image, Video, Send, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const CreatePost = ({ onPostCreated = () => { } }) => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const { primaryColor } = useTheme();
+  const { user } = useAuth();
 
-  const { user, setUser } = useAuth();
+  // -- State --
+  const [description, setDescription] = useState("");
+  const [file, setFile] = useState(null);
+  const [fileType, setFileType] = useState("text"); // 'text', 'image', 'video'
+  const [isFocused, setIsFocused] = useState(false);
 
-  useEffect(() => {
-    if (user && user._id) {
-      setPostData((prevData) => ({ ...prevData, userId: user._id }));
-    }
-  }, [user]);
-
-
-  const [postData, setPostData] = useState({
-    userId: "",
-    description: "",
-    file: "",
-    fileType: "text",
-  });
-  const handleChange = (e) => {
-    setPostData({ ...postData, [e.target.name]: e.target.value });
-  };
-
+  // -- Handlers --
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const fileType = file.type.startsWith("image")
-        ? "image"
-        : file.type.startsWith("video")
-          ? "video"
-          : null;
-
-      if (!fileType) {
-        console.log("Unsupported file type selected.");
-        return;
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const type = selectedFile.type.startsWith("image") ? "image" : selectedFile.type.startsWith("video") ? "video" : null;
+      if (type) {
+        setFile(selectedFile);
+        setFileType(type);
       }
-
-      setPostData({ ...postData, file, fileType }); // Store the file and its type
-    } else {
-      console.log("No file selected.");
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const removeFile = () => {
+    setFile(null);
+    setFileType("text");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
 
-    if (!postData.description) {
-      console.log("Description is required!");
-      return;
-    }
+  const handleSubmit = async () => {
+    if (!description.trim() && !file) return;
 
     try {
       const formData = new FormData();
-      formData.append("userId", postData.userId);
-      formData.append("description", postData.description);
+      formData.append("userId", user._id);
+      formData.append("description", description);
 
-      // Only append file and fileType if a file is selected
-      if (postData.file) {
-        formData.append("file", postData.file);
-        formData.append("fileType", postData.fileType);
+      if (file) {
+        formData.append("file", file);
+        formData.append("fileType", fileType);
       } else {
-        formData.append("fileType", "text"); // Default to "text" if no file is uploaded
+        formData.append("fileType", "text");
       }
 
       const res = await API.post("/posts/createPost", formData, {
@@ -78,48 +57,94 @@ const CreatePost = ({ onPostCreated = () => { } }) => {
       });
 
       onPostCreated(res.data);
-      setPostData({ userId: postData.userId, description: "", file: "", fileType: "text" });
-      fileInputRef.current.value = null; // Clear file input
-      navigate("/feed");
+      // Reset
+      setDescription("");
+      setFile(null);
+      setFileType("text");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+
     } catch (error) {
-      console.error("Error creating post:", error.response?.data || error.message);
+      console.error("Error creating post:", error);
     }
   };
-  if (!user || !user._id) return <Loading />; // Show a loader here
-  return (
-    <div className="bg-[var(--primary-color)] p-4 rounded-md shadow-lg mb-4 border border-black">
-      <p className="mb-2 text-white text-2xl font-bold">
-        What's happening? Share your thoughts below:
-      </p>
-      <input
-        type="text"
-        name="description"
-        placeholder="Tell me your thoughts..."
-        value={postData.description}
-        onChange={handleChange}
-        className="w-full p-2 bg-black border border-[var(--primary-color)] rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white mb-4"
-      />
-      <input
-        type="file"
-        accept="image/*,video/*"
-        onChange={handleFileChange}
-        ref={fileInputRef}
-        className="w-full p-2 bg-black border border-[var(--primary-color)] rounded text-white focus:outline-none focus:ring-2 focus:ring-white mb-4"
-      />
-      {postData.file && (
-        <img
-          src={URL.createObjectURL(postData.file)}
-          alt="Preview"
-          className="w-full mb-4 rounded"
-        />
-      )}
 
-      <button
-        onClick={handleSubmit}
-        className="bg-black text-[var(--primary-color)] px-4 py-2 rounded mt-2 hover:bg-[var(--primary-color)] hover:text-black hover:border-black border transition"
-      >
-        Post
-      </button>
+  if (!user || !user._id) return <Loading />;
+
+  return (
+    <div
+      className={`
+            bg-[#0a0a0a] border border-white/10 rounded-2xl p-4 mb-6 transition-all duration-300
+            ${isFocused ? "border-[var(--primary-color)] shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]" : "hover:border-white/20"}
+        `}
+    >
+      <div className="flex gap-4">
+        {/* User Avatar */}
+        <div className="shrink-0">
+          <img
+            src={user.image || "https://picsum.photos/200"}
+            alt="User"
+            className="w-10 h-10 rounded-full object-cover border border-white/10"
+          />
+        </div>
+
+        {/* Input Area */}
+        <div className="flex-1">
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder="What's brewing in your universe?"
+            className="w-full bg-transparent text-white placeholder-gray-500 text-lg resize-none focus:outline-none min-h-[60px] font-sans"
+            rows={isFocused || description ? 3 : 1}
+          />
+
+          {/* File Preview */}
+          {file && (
+            <div className="relative mt-2 rounded-xl overflow-hidden max-h-64 border border-white/10 group">
+              <button
+                onClick={removeFile}
+                className="absolute top-2 right-2 bg-black/50 p-1 rounded-full text-white hover:bg-red-500 hover:text-white transition-colors z-10"
+              >
+                <X size={16} />
+              </button>
+              {fileType === 'image' ? (
+                <img src={URL.createObjectURL(file)} alt="Preview" className="w-full h-full object-cover" />
+              ) : (
+                <video src={URL.createObjectURL(file)} controls className="w-full h-full" />
+              )}
+            </div>
+          )}
+
+          {/* Toolbar */}
+          <div className={`flex items-center justify-between mt-3 pt-3 border-t border-white/5 ${!isFocused && !description && !file ? "hidden" : "flex"}`}>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="text-[var(--primary-color)] p-2 rounded-full hover:bg-[var(--primary-color)]/10 transition-colors"
+                title="Add Media"
+              >
+                <Image size={20} />
+              </button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*,video/*"
+                onChange={handleFileChange}
+              />
+            </div>
+
+            <Button
+              onClick={handleSubmit}
+              disabled={!description.trim() && !file}
+              className="rounded-full px-6 bg-[var(--primary-color)] text-black hover:bg-[var(--primary-color)]/90 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Post <Send size={16} className="ml-2" />
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

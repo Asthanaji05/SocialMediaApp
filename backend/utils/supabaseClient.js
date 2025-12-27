@@ -2,12 +2,12 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const supabaseUrl = process.env.REALM_SUPABASE_URL;
+const supabaseUrl = process.env.REALM_SUPABASE_URL || 'https://rqhyepbqlokrccsrpnlc.supabase.co';
 const supabaseKey = process.env.REALM_SUPABASE_ANON_KEY;
 const supabaseServiceKey = process.env.REALM_SUPABASE_ACCESS_TOKEN; // Service Role Key for Admin ops
 
 if (!supabaseUrl || !supabaseKey) {
-    console.warn('Moscownpur (RealM) Supabase configuration missing. Cross-platform sync will not work.');
+    console.warn('⚠️ Moscownpur (RealM) Supabase configuration missing. Identity sync PENDING.');
 }
 
 const realmSupabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseKey || 'placeholder');

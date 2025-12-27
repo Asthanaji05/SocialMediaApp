@@ -26,3 +26,11 @@ services:
         value: 10000
       - key: FRONTEND_URL
         value: https://moscownpur-circles.onrender.com
+      - key: VITE_API_URL
+        value: https://moscownpur-circles.onrender.com
+      - key: VITE_GOOGLE_CLIENT_ID
+        sync: false
+      - key: VITE_REALM_SUPABASE_URL
+        sync: false
+      - key: VITE_REALM_SUPABASE_ANON_KEY
+        sync: false

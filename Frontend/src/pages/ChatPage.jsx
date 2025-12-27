@@ -5,6 +5,10 @@ import ChatList from "../components/Chat/ChatList";
 import ChatWindow from "../components/Chat/ChatWIndow";
 import Loading from "../components/UI/Loading";
 import { MessageSquareOff } from "lucide-react";
+import { io } from "socket.io-client";
+
+// Initialize socket - connect to backend port 3000
+const socket = io("http://localhost:3000", { withCredentials: true });
 
 const ChatPage = () => {
   const { user } = useAuth();
@@ -12,6 +16,51 @@ const ChatPage = () => {
   const [following, setFollowing] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // --- Socket Listeners ---
+  useEffect(() => {
+    if (!user) return;
+
+    // Listen for incoming signals (messages)
+    socket.on("newMessage", (messageData) => {
+      // console.log("Incoming signal detected:", messageData);
+
+      // 1. Update the chat window if the transmission belongs to the active corridor
+      setSelectedChat((prev) => {
+        if (prev && prev._id === messageData.chatId) {
+          // Check for existing message to avoid duplicates from echo
+          const messageExists = prev.messages.some(m => m._id === messageData._id);
+          if (messageExists) return prev;
+
+          return {
+            ...prev,
+            messages: [...prev.messages, messageData]
+          };
+        }
+        return prev;
+      });
+
+      // 2. Update the sidebar preview list so the latest signal shows up
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat._id === messageData.chatId
+            ? { ...chat, messages: [...(chat.messages || []), messageData] }
+            : chat
+        )
+      );
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [user]);
+
+  // Synchronize with the room whenever the selected chat changes
+  useEffect(() => {
+    if (selectedChat?._id) {
+      socket.emit("joinChat", selectedChat._id);
+    }
+  }, [selectedChat?._id]);
 
   useEffect(() => {
     if (!user || !user._id) return;
@@ -60,26 +109,19 @@ const ChatPage = () => {
     if (!selectedChat) return;
 
     try {
+      // First, save the signal to the database via REST
       const response = await API.post("/chats/send", {
         chatId: selectedChat._id,
         sender: user._id,
         content: message,
       });
 
-      const updatedChat = {
-        ...selectedChat,
-        messages: [...selectedChat.messages, response.data],
-      };
+      // Then, broadcast the transmission to the corridor via Socket.io
+      socket.emit("sendMessage", {
+        ...response.data,
+        chatId: selectedChat._id
+      });
 
-      setSelectedChat(updatedChat);
-
-      setChats((prevChats) =>
-        prevChats.map((chat) =>
-          chat._id === selectedChat._id
-            ? { ...chat, messages: [...chat.messages, response.data] }
-            : chat
-        )
-      );
     } catch (error) {
       console.error("Error sending message:", error);
     }

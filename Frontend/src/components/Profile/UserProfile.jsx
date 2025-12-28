@@ -139,26 +139,26 @@ const UserProfile = () => {
       <div className="relative mb-20">
         {/* Banner / Cover Gradient */}
         <div
-          className="h-48 w-full bg-gradient-to-b from-[var(--primary-color)]/20 to-black relative overflow-hidden"
+          className="h-64 sm:h-72 md:h-80 w-full bg-gradient-to-b from-[var(--primary-color)]/20 to-black relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
         </div>
 
         {/* Profile Card Info - Floating */}
-        <div className="absolute top-28 left-0 right-0 px-6">
-          <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-end md:items-center gap-6">
+        <div className="absolute top-40 sm:top-44 md:top-48 left-0 right-0 px-4 sm:px-6">
+          <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-6 md:gap-8">
 
             {/* Avatar */}
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-tr from-[var(--primary-color)] to-white rounded-full opacity-70 blur group-hover:opacity-100 transition duration-500"></div>
+              <div className="absolute -inset-2 sm:-inset-1 bg-gradient-to-tr from-[var(--primary-color)] to-white rounded-full opacity-70 blur group-hover:opacity-100 transition duration-500"></div>
               {user.image ? (
                 <img
                   src={user.image}
                   alt="Profile"
-                  className="relative w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-black"
+                  className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-black"
                 />
               ) : (
-                <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-black bg-white/10 flex items-center justify-center text-white text-6xl font-bold">
+                <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full border-4 border-black bg-white/10 flex items-center justify-center text-white text-5xl sm:text-6xl font-bold">
                   {user.firstName?.[0]}
                 </div>
               )}
@@ -166,32 +166,40 @@ const UserProfile = () => {
               <div className={`absolute bottom-2 right-2 w-5 h-5 rounded-full border-4 border-black ${user.status === 'online' ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 'bg-gray-500'}`} title={user.status || 'offline'}></div>
             </div>
 
-            {/* Text Info */}
-            <div className="flex-1 mb-2">
-              <h1 className="text-4xl md:text-5xl font-bungee text-white leading-none">
+            {/* Text Info - Centered on mobile, left-aligned on desktop */}
+            <div className="w-full max-w-2xl">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bungee text-white leading-none mb-3">
                 {user.firstName} {user.lastName}
               </h1>
-              <p className="text-gray-400 font-borel text-lg">@{user.userName || "creator"}</p>
-              <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {user.address || "Nowhere"}</span>
-                <span>•</span>
-                <span className="flex items-center gap-1 italic"><Radio className="w-3 h-3 text-[var(--primary-color)]" /> {user.status === 'online' ? 'Active Signal' : `Last seen ${new Date(user.lastSeen).toLocaleDateString()}`}</span>
+              <p className="text-lg sm:text-xl md:text-2xl text-gray-400 font-borel mb-4">@{user.userName || "creator"}</p>
+              
+              {/* Status & Location - Responsive layout */}
+              <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3 sm:gap-6 text-sm sm:text-base text-gray-500">
+                <span className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" /> 
+                  {user.address || "Nowhere"}
+                </span>
+                <span className="hidden sm:inline">•</span>
+                <span className="flex items-center gap-2 italic">
+                  <Radio className="w-3 h-3 text-[var(--primary-color)]" /> 
+                  {user.status === 'online' ? 'Active Signal' : `Last seen ${new Date(user.lastSeen).toLocaleDateString()}`}
+                </span>
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-3 mb-4">
-              <Link to="/settings">
-                <Button variant="outline" className="rounded-full border-white/20 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] bg-black/50 backdrop-blur-md">
+            {/* Actions - Centered on mobile */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-md sm:max-w-none">
+              <Link to="/settings" className="w-full sm:w-auto">
+                <Button variant="outline" className="rounded-full border-white/20 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] bg-black/50 backdrop-blur-md w-full sm:w-auto">
                   <Settings className="w-4 h-4 mr-2" /> Settings
                 </Button>
               </Link>
               <Button
                 variant="ghost"
-                className="rounded-full text-red-500 hover:text-red-400 hover:bg-red-500/10"
+                className="rounded-full text-red-500 hover:text-red-400 hover:bg-red-500/10 w-full sm:w-auto"
                 onClick={handleDeleteAccount}
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-4 h-4 mr-2" /> Delete Account
               </Button>
             </div>
 
@@ -289,7 +297,7 @@ const UserProfile = () => {
         <div className="flex gap-8 mb-8 border-b border-white/10">
           <button
             onClick={() => handleTabChange("posts")}
-            className={`pb-3 text-lg font-bungee tracking-wide transition-all relative ${activeTab === "posts" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
+            className={`pb-3 text-base sm:text-lg font-bungee tracking-wide transition-all relative ${activeTab === "posts" ? "text-[var(--primary-color)]" : "text-gray-500 hover:text-gray-300"}`}
           >
             Top Creations
             {activeTab === "posts" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--primary-color)] shadow-[0_0_10px_var(--primary-color)]"></span>}

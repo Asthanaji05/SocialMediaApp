@@ -87,7 +87,7 @@ const CreatePost = ({ onPostCreated = () => { } }) => {
               className="w-10 h-10 rounded-full object-cover border border-white/10"
             />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-bold border border-white/10">{user.firstName?.[0]}</div>
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-bold border border-white/10">{user.userName?.[0] || user.firstName?.[0]}</div>
           )}
         </div>
 

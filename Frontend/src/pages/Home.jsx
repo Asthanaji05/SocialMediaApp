@@ -32,18 +32,18 @@ const Home = () => {
         {/* --- HERO SECTION --- */}
         <section className="relative flex flex-col items-center justify-center py-24 px-6 text-center">
           <div className="max-w-5xl mx-auto space-y-8">
-            <h1 className="text-6xl md:text-9xl tracking-wide leading-none font-bungee grid gap-4">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl tracking-wide leading-none font-bungee grid gap-4">
               Moscownpur
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--primary-color)] to-white">
                 Circles
               </span>
             </h1>
 
-            <p className="text-3xl md:text-5xl text-white font-bungee mt-8">
+            <p className="text-xl sm:text-2xl md:text-3xl lg:text-5xl text-white font-bungee mt-8">
               Where Creators Truly Connect
             </p>
 
-            <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto leading-relaxed pt-8 font-light">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-2xl mx-auto leading-relaxed pt-8 font-light">
               The private social layer of <span className="font-semibold text-white">MosCownpur</span> —<br />
               designed for creators who value depth over reach and conversation over noise.
             </p>

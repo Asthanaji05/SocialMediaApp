@@ -30,7 +30,6 @@ function App() {
         <AuthProvider>
           <Router>
             <NavBar /> {/* Global NavBar */}
-            <div className="pt-10 bg-black"> {/* Add padding top and black background */}
               <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
@@ -52,7 +51,6 @@ function App() {
               
 
               </Routes>
-            </div>
             <Footer />
           </Router>
         </AuthProvider>

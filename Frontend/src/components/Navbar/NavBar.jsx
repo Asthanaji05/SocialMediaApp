@@ -45,7 +45,7 @@ const NavBar = () => {
         className={`fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ease-in-out box-border
             ${scrolled
             ? "top-4 w-[90%] md:w-[80%] max-w-5xl rounded-full bg-black/80 backdrop-blur-xl shadow-[0_0_30px_-5px_var(--primary-color)]"
-            : "top-0 w-full max-w-[100vw] bg-transparent border-b border-transparent py-4"
+            : "top-0 w-full max-w-[100vw] bg-transparent border-b border-transparent py-2"
           }
         `}
       >
@@ -89,7 +89,7 @@ const NavBar = () => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-4">
-                <div className={`transition-all duration-500 ${scrolled ? "w-48 lg:w-64" : "w-48 lg:w-64"} max-w-[200px] lg:max-w-xs`}>
+                <div className={`transition-all duration-500 ${scrolled ? "w-32 lg:w-48" : "w-32 lg:w-48"} max-w-[150px] lg:max-w-48`}>
                   <SearchBar />
                 </div>
                 <ThemeSwitcher />

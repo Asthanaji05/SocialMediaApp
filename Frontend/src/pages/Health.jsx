@@ -77,7 +77,7 @@ const Health = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white p-8">
+    <div className="min-h-screen bg-black text-white pt-28 px-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">

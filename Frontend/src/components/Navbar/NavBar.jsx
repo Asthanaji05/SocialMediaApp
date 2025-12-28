@@ -74,6 +74,7 @@ const NavBar = () => {
           <div className="hidden md:flex items-center gap-2 bg-black/20 p-1 rounded-full border border-white/5 backdrop-blur-md">
             <Link to="/" className={linkClasses("/")}>Home</Link>
             <Link to="/feed" className={linkClasses("/feed")}>Feed</Link>
+            <Link to="/health" className={linkClasses("/health")}>Health</Link>
             
             {user && (
               <>
@@ -129,6 +130,7 @@ const NavBar = () => {
       `}>
           <Link to="/" className="text-lg font-medium text-gray-300 hover:text-[var(--primary-color)]" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
           <Link to="/feed" className="text-lg font-medium text-gray-300 hover:text-[var(--primary-color)]" onClick={() => setIsMobileMenuOpen(false)}>Feed</Link>
+          <Link to="/health" className="text-lg font-medium text-gray-300 hover:text-[var(--primary-color)]" onClick={() => setIsMobileMenuOpen(false)}>Health</Link>
           
 
           {user ? (

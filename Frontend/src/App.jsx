@@ -20,6 +20,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import GoogleSignup from "./components/Auth/GoogleSignup.jsx";
 import PostDetails from "./components/Feed/PostDetails";
 import AboutMoscownpur from "./pages/AboutMoscownpur";
+import Health from "./pages/Health";
 
 
 function App() {
@@ -29,7 +30,8 @@ function App() {
         <AuthProvider>
           <Router>
             <NavBar /> {/* Global NavBar */}
-            <Routes>
+            <div className="pt-10 bg-black"> {/* Add padding top and black background */}
+              <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/logout" element={<Logout />} />
@@ -46,9 +48,11 @@ function App() {
               <Route path="/circles" element={<MyNetwork />} />
               <Route path="/circles/:userId" element={<OtherUserProfile />} />
               <Route path="/lexicon" element={<AboutMoscownpur />} />
+              <Route path="/health" element={<Health />} />
               
 
-            </Routes>
+              </Routes>
+            </div>
             <Footer />
           </Router>
         </AuthProvider>

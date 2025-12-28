@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import ChatList from "../components/Chat/ChatList";
 import ChatWindow from "../components/Chat/ChatWIndow";
 import Loading from "../components/ui/Loading";
-import { MessageSquareOff } from "lucide-react";
+import { MessageSquareOff, ArrowLeft } from "lucide-react";
 import socket from "../utils/socket";
 
 const ChatPage = () => {
@@ -13,6 +13,8 @@ const ChatPage = () => {
   const [following, setFollowing] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isMobileView, setIsMobileView] = useState(false);
+  const [showChatList, setShowChatList] = useState(true);
 
   // Request Notification Permission on mount
   useEffect(() => {
@@ -20,6 +22,23 @@ const ChatPage = () => {
       Notification.requestPermission();
     }
   }, []);
+
+  // Detect mobile view and handle responsive behavior
+  useEffect(() => {
+    const checkMobileView = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobileView(mobile);
+      if (mobile && selectedChat) {
+        setShowChatList(false);
+      } else if (!mobile) {
+        setShowChatList(true);
+      }
+    };
+
+    checkMobileView();
+    window.addEventListener('resize', checkMobileView);
+    return () => window.removeEventListener('resize', checkMobileView);
+  }, [selectedChat]);
 
   const markAsRead = useCallback(async (chatId) => {
     if (!user || !chatId) return;
@@ -167,8 +186,27 @@ const ChatPage = () => {
         setChats((prevChats) => [...prevChats, response.data]);
       }
       setSelectedChat(response.data);
+      
+      // On mobile, switch to chat view after selection
+      if (isMobileView) {
+        setShowChatList(false);
+      }
     } catch (error) {
       console.error("Error selecting or creating chat:", error);
+    }
+  };
+
+  const handleBackToList = () => {
+    setShowChatList(true);
+    if (isMobileView) {
+      setSelectedChat(null);
+    }
+  };
+
+  const handleSelectChat = (chat) => {
+    setSelectedChat(chat);
+    if (isMobileView) {
+      setShowChatList(false);
     }
   };
 
@@ -195,45 +233,117 @@ const ChatPage = () => {
   if (loading && !user) return <Loading />;
 
   return (
-    <div className="min-h-screen bg-black text-white pt-20 px-4 md:px-6">
-      <div className="max-w-7xl mx-auto h-[85vh] flex overflow-hidden bg-[#0f0f0f] border border-white/5 rounded-[2.5rem] shadow-2xl relative">
+    <div className="min-h-screen bg-black text-white pt-20 px-2 md:px-6">
+      <div className="max-w-7xl mx-auto h-[85vh] md:h-[85vh] flex overflow-hidden bg-[#0f0f0f] border border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl relative">
 
         {/* Decorative Background Glows */}
-        <div className="absolute top-0 left-0 w-64 h-64 bg-[var(--primary-color)]/5 blur-[120px] pointer-events-none"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[var(--primary-color)]/5 blur-[150px] pointer-events-none"></div>
+        <div className="absolute top-0 left-0 w-32 h-32 md:w-64 md:h-64 bg-[var(--primary-color)]/5 blur-[80px] md:blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-0 right-0 w-48 h-48 md:w-96 md:h-96 bg-[var(--primary-color)]/5 blur-[100px] md:blur-[150px] pointer-events-none"></div>
 
         {user ? (
           <>
-            {/* Sidebar Container */}
-            <div className="w-full md:w-80 lg:w-96 border-r border-white/5 h-full relative z-10">
-              <ChatList
-                chats={chats}
-                following={following}
-                userId={user._id}
-                onSelectChat={setSelectedChat}
-                onCreateChat={handleSelectOrCreateChat}
-                selectedChatId={selectedChat?._id}
-              />
-            </div>
-
-            {/* Window Container */}
-            <div className="flex-1 h-full flex flex-col relative z-10">
-              {selectedChat ? (
-                <ChatWindow
-                  selectedChat={selectedChat}
-                  currentUserId={user._id}
-                  onSendMessage={sendMessage}
-                />
-              ) : (
-                <div className="flex-1 flex flex-col items-center justify-center text-gray-600 p-8 text-center">
-                  <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6">
-                    <MessageSquareOff size={40} className="text-gray-700" />
+            {/* Mobile: Show Chat List or Chat Window */}
+            {isMobileView ? (
+              <>
+                {/* Chat List View */}
+                {showChatList ? (
+                  <div className="w-full h-full relative z-10">
+                    <ChatList
+                      chats={chats}
+                      following={following}
+                      userId={user._id}
+                      onSelectChat={handleSelectChat}
+                      onCreateChat={handleSelectOrCreateChat}
+                      selectedChatId={selectedChat?._id}
+                    />
                   </div>
-                  <h3 className="text-2xl font-bungee text-gray-400 mb-2">No Active Orbit</h3>
-                  <p className="font-borel max-w-xs">Select a trusted creator from the side to begin a private transmission.</p>
+                ) : (
+                  /* Chat Window View */
+                  <div className="w-full h-full flex flex-col relative z-10">
+                    {selectedChat ? (
+                      <>
+                        {/* Mobile Back Button */}
+                        <div className="px-4 py-3 border-b border-white/5 bg-black/40 backdrop-blur-md flex items-center gap-3">
+                          <button
+                            onClick={handleBackToList}
+                            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                          >
+                            <ArrowLeft size={20} />
+                          </button>
+                          <div className="flex items-center gap-3 flex-1">
+                            {selectedChat.participants.find(p => p._id !== user._id)?.image ? (
+                              <img 
+                                src={selectedChat.participants.find(p => p._id !== user._id).image} 
+                                className="w-8 h-8 rounded-full object-cover border border-white/10" 
+                              />
+                            ) : (
+                              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold text-sm">
+                                {selectedChat.participants.find(p => p._id !== user._id)?.firstName?.[0]}
+                              </div>
+                            )}
+                            <div>
+                              <h3 className="font-bold text-white text-sm">
+                                {selectedChat.participants.find(p => p._id !== user._id)?.firstName} {selectedChat.participants.find(p => p._id !== user._id)?.lastName}
+                              </h3>
+                              <p className="text-[9px] text-[var(--primary-color)] font-bold uppercase tracking-wider opacity-80">Signal Active</p>
+                            </div>
+                          </div>
+                        </div>
+                        <ChatWindow
+                          selectedChat={selectedChat}
+                          currentUserId={user._id}
+                          onSendMessage={sendMessage}
+                          isMobile={true}
+                        />
+                      </>
+                    ) : (
+                      <div className="flex-1 flex flex-col items-center justify-center text-gray-600 p-8 text-center">
+                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                          <MessageSquareOff size={32} className="text-gray-700" />
+                        </div>
+                        <h3 className="text-xl font-bungee text-gray-400 mb-2">No Active Orbit</h3>
+                        <p className="font-borel text-sm max-w-xs">Select a trusted creator to begin a private transmission.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              /* Desktop: Side-by-side layout */
+              <>
+                {/* Sidebar Container */}
+                <div className="w-full md:w-80 lg:w-96 border-r border-white/5 h-full relative z-10">
+                  <ChatList
+                    chats={chats}
+                    following={following}
+                    userId={user._id}
+                    onSelectChat={handleSelectChat}
+                    onCreateChat={handleSelectOrCreateChat}
+                    selectedChatId={selectedChat?._id}
+                  />
                 </div>
-              )}
-            </div>
+
+                {/* Window Container */}
+                <div className="hidden md:flex flex-1 h-full flex-col relative z-10">
+                  {selectedChat ? (
+                    <ChatWindow
+                      selectedChat={selectedChat}
+                      currentUserId={user._id}
+                      onSendMessage={sendMessage}
+                      isMobile={false}
+                    />
+                  ) : (
+                    <div className="flex-1 flex flex-col items-center justify-center text-gray-600 p-8 text-center">
+                      <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6">
+                        <MessageSquareOff size={40} className="text-gray-700" />
+                      </div>
+                      <h3 className="text-2xl font-bungee text-gray-400 mb-2">No Active Orbit</h3>
+                      <p className="font-borel max-w-xs">Select a trusted creator from the side to begin a private transmission.</p>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center">

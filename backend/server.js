@@ -73,6 +73,36 @@ if (process.env.NODE_ENV !== 'production') {
   app.get("/", (req, res) => {
     res.send("Backend is running!");
   });
+
+  // Health check endpoints
+  app.get("/health", (req, res) => {
+    res.json({ 
+      status: "connected", 
+      database: "mongodb",
+      timestamp: new Date().toISOString() 
+    });
+  });
+
+  app.get("/supabase-health", (req, res) => {
+    // Basic Supabase health check
+    const supabaseUrl = process.env.REALM_SUPABASE_URL;
+    const supabaseKey = process.env.REALM_SUPABASE_ANON_KEY;
+    
+    if (supabaseUrl && supabaseKey && !supabaseKey.includes('placeholder')) {
+      res.json({ 
+        status: "connected", 
+        database: "supabase",
+        url: supabaseUrl.replace(/\/$/, ''),
+        timestamp: new Date().toISOString() 
+      });
+    } else {
+      res.status(500).json({ 
+        status: "error", 
+        message: "Supabase configuration missing or invalid",
+        database: "supabase"
+      });
+    }
+  });
 }
 import userRoutes from "./routes/userRoutes.js";
 

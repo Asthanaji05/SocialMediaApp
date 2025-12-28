@@ -167,7 +167,7 @@ const UserProfile = () => {
             </div>
 
             {/* Text Info - Centered on mobile, left-aligned on desktop */}
-            <div className="w-full max-w-2xl">
+            <div className="w-full max-w-2xl mb-6">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bungee text-white leading-none mb-3">
                 {user.firstName} {user.lastName}
               </h1>
@@ -187,16 +187,16 @@ const UserProfile = () => {
               </div>
             </div>
 
-            {/* Actions - Centered on mobile */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-md sm:max-w-none">
-              <Link to="/settings" className="w-full sm:w-auto">
-                <Button variant="outline" className="rounded-full border-white/20 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] bg-black/50 backdrop-blur-md w-full sm:w-auto">
+            {/* Actions - Centered on mobile with better responsive design */}
+            <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md sm:max-w-none">
+              <Link to="/settings" className="flex-1 sm:flex-initial">
+                <Button variant="outline" className="rounded-full border-white/20 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] bg-black/50 backdrop-blur-md w-full sm:w-auto text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3">
                   <Settings className="w-4 h-4 mr-2" /> Settings
                 </Button>
               </Link>
               <Button
                 variant="ghost"
-                className="rounded-full text-red-500 hover:text-red-400 hover:bg-red-500/10 w-full sm:w-auto"
+                className="rounded-full text-red-500 hover:text-red-400 hover:bg-red-500/10 flex-1 sm:flex-initial text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3"
                 onClick={handleDeleteAccount}
               >
                 <Trash2 className="w-4 h-4 mr-2" /> Delete Account
@@ -208,7 +208,7 @@ const UserProfile = () => {
       </div>
 
       {/* --- BIO & STATS --- */}
-      <div className="max-w-4xl mx-auto px-6 mt-32 mb-12">
+      <div className="max-w-4xl mx-auto px-6 mt-58 mb-12">
         {/* Bio */}
         <div className="mb-8 max-w-2xl">
           <p className="text-xl text-gray-300 font-borel leading-relaxed">
@@ -218,7 +218,7 @@ const UserProfile = () => {
 
         {/* Moscownpur Link Card */}
         {!realmStatus.loading && (
-          <div className="mb-8 p-6 rounded-3xl bg-[#0a0a0a] border border-orange-500/20 shadow-[0_0_30px_rgba(249,115,22,0.05)] overflow-hidden relative group transition-all duration-500 hover:border-orange-500/40">
+          <div className="mb-8 mt-18 p-6 rounded-3xl bg-[#0a0a0a] border border-orange-500/20 shadow-[0_0_30px_rgba(249,115,22,0.05)] overflow-hidden relative group transition-all duration-500 hover:border-orange-500/40">
             {/* Background Narrative Glow */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 blur-[100px] -mr-32 -mt-32"></div>
 
